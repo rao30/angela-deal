@@ -140,12 +140,15 @@
                         <tr class="text-slate-500 bg-black/40 border-b border-white/5 uppercase text-[8px] font-black tracking-widest whitespace-nowrap">
                             <th class="p-4">Property Identity</th>
                             <th class="p-4">Purchase P.</th>
-                            <th class="p-4 bg-red-500/5 text-red-400">Angela PITI</th>
-                            <th class="p-4 text-red-500">Angela Profit</th>
+                            <th class="p-4 bg-slate-500/5 text-slate-400">Angela PITI</th>
+                            <th class="p-4 text-emerald-400">Angela Rents</th>
+                            <th class="p-4 text-emerald-500">Angela Profit</th>
+                            <th class="p-4 text-amber-400">Seller Note Income</th>
                             <th class="p-4 border-l border-white/10 text-sky-400">Rate %</th>
                             <th class="p-4 text-sky-400">Term</th>
                             <th class="p-4 text-sky-400">Down</th>
                             <th class="p-4 text-sky-400 font-bold">New PITI</th>
+                            <th class="p-4 text-sky-500">Stabilized Rents</th>
                             <th class="p-4 border-l border-white/10 text-emerald-400">Current CF</th>
                             <th class="p-4 text-emerald-500 font-bold">Market CF</th>
                         </tr>
@@ -158,12 +161,15 @@
                                     <div :class="prop.isAnchor ? 'text-red-400/80' : 'text-sky-400/80'" class="text-[7px] font-black uppercase tracking-tighter" x-text="prop.isAnchor ? 'Bank Loan @ ' + (prop.rate || globalBankRate) + '%' : 'Seller Note @ ' + (prop.rate || globalNoteRate) + '%'"></div>
                                 </td>
                                 <td class="p-4"><input type="number" x-model.number="prop.price" step="5000"></td>
-                                <td class="p-4 font-mono text-slate-500 bg-red-500/[0.02]" x-text="formatCurrency(prop.currentPITI)"></td>
-                                <td class="p-4 font-mono" :class="calculateAngelaProfit(prop) > 0 ? 'text-red-400' : 'text-red-600'" x-text="formatCurrency(calculateAngelaProfit(prop))"></td>
+                                <td class="p-4 font-mono text-slate-500 bg-slate-500/[0.02]" x-text="formatCurrency(prop.currentPITI)"></td>
+                                <td class="p-4 font-mono text-emerald-400"><input type="number" x-model.number="prop.currentRent" step="50"></td>
+                                <td class="p-4 font-mono text-emerald-400 font-bold" x-text="formatCurrency(calculateAngelaProfit(prop))"></td>
+                                <td class="p-4 font-mono text-amber-400 font-bold" x-text="formatCurrency(calculateSellerNoteIncome(prop))"></td>
                                 <td class="p-4 border-l border-white/10"><input type="number" x-model.number="prop.rate" :placeholder="prop.isAnchor ? globalBankRate : globalNoteRate" step="0.125"></td>
                                 <td class="p-4"><input type="number" x-model.number="prop.term" step="12"></td>
                                 <td class="p-4"><input type="number" x-model.number="prop.down" step="0.05"></td>
                                 <td class="p-4 font-mono font-black text-sky-400" x-text="formatCurrency(calculateNewPITI(prop))"></td>
+                                <td class="p-4"><input type="number" x-model.number="prop.marketRent" step="50"></td>
                                 <td class="p-4 font-mono border-l border-white/10" :class="calculateCurrentCF(prop) > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(calculateCurrentCF(prop))"></td>
                                 <td class="p-4 font-mono font-bold" :class="calculateMarketCF(prop) > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(calculateMarketCF(prop))"></td>
                             </tr>
@@ -173,10 +179,13 @@
                         <tr class="bg-white/[0.03] text-white font-bold text-[11px] border-t-2 border-white/10 whitespace-nowrap">
                             <td class="p-4 uppercase tracking-tighter text-[9px] font-black">Portfolio Totals</td>
                             <td class="p-4 font-mono" x-text="formatCurrency(totalValue)"></td>
-                            <td class="p-4 font-mono bg-red-500/[0.05] text-slate-400" x-text="formatCurrency(totalCurrentPITI)"></td>
-                            <td class="p-4 font-mono text-red-400 font-bold" x-text="formatCurrency(totalAngelaProfit)"></td>
+                            <td class="p-4 font-mono bg-slate-500/[0.05] text-slate-400" x-text="formatCurrency(totalCurrentPITI)"></td>
+                            <td class="p-4 font-mono text-emerald-400" x-text="formatCurrency(totalCurrentRent)"></td>
+                            <td class="p-4 font-mono text-emerald-400 font-bold" x-text="formatCurrency(totalAngelaProfit)"></td>
+                            <td class="p-4 font-mono text-amber-400 font-bold" x-text="formatCurrency(totalSellerNoteIncome)"></td>
                             <td colspan="3" class="p-4 border-l border-white/10"></td>
                             <td class="p-4 font-mono text-sky-400 font-black" x-text="formatCurrency(totalNewPITIValue)"></td>
+                            <td class="p-4 font-mono text-sky-500 font-black" x-text="formatCurrency(totalMarketRent)"></td>
                             <td class="p-4 font-mono border-l border-white/10" :class="totalFutureCurrentCF > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(totalFutureCurrentCF)"></td>
                             <td class="p-4 font-mono font-black text-emerald-500" x-text="formatCurrency(totalFutureMarketCF)"></td>
                         </tr>
@@ -221,6 +230,12 @@
                 calculateCurrentCF(p) { return p.currentRent - this.calculateNewPITI(p); },
                 calculateMarketCF(p) { return p.marketRent - this.calculateNewPITI(p); },
                 calculateAngelaProfit(p) { return p.currentRent - p.currentPITI; },
+                calculateSellerNoteIncome(p) { 
+                    if (p.isAnchor) return 0;
+                    const amount = p.price * (1 - (p.down || 0));
+                    const rate = p.rate !== null && p.rate !== "" ? p.rate : this.globalNoteRate;
+                    return this.calculateAmortization(amount, rate, p.term);
+                },
                 
                 get totalValue() { return this.properties.reduce((s, p) => s + p.price, 0); },
                 get totalCurrentRent() { return this.properties.reduce((s, p) => s + p.currentRent, 0); },
@@ -232,6 +247,7 @@
                 get totalFutureCurrentCF() { return this.totalCurrentRent - this.totalNewPITIValue; },
                 get totalFutureMarketCF() { return this.totalMarketRent - this.totalNewPITIValue; },
                 get totalAngelaProfit() { return this.properties.reduce((s, p) => s + this.calculateAngelaProfit(p), 0); },
+                get totalSellerNoteIncome() { return this.properties.reduce((s, p) => s + this.calculateSellerNoteIncome(p), 0); },
                 
                 get totalPassiveIncome() {
                     return this.properties.reduce((s, p) => {
