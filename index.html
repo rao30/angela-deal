@@ -41,37 +41,7 @@
             </div>
         </header>
 
-        <!-- Global Portfolio Parameters -->
-        <section class="mb-12 glass p-8 rounded-[2.5rem] border-sky-500/20 shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
-                <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
-            </div>
-            
-            <div class="relative z-10 flex flex-col lg:flex-row items-center gap-12">
-                <div class="flex-1">
-                    <h2 class="text-3xl font-bold text-white mb-2">Portfolio Parameters</h2>
-                    <p class="text-slate-400 text-sm">Set global defaults for the portfolio. Individual property overrides can be adjusted in the ledger below.</p>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full lg:w-auto">
-                    <div class="glass p-6 rounded-2xl bg-sky-500/5 border-sky-500/10 min-w-[280px]">
-                        <div class="flex justify-between items-center mb-4">
-                            <label class="text-[10px] font-black uppercase text-sky-400 tracking-widest">Global Seller Note</label>
-                            <span class="text-3xl font-black text-white" x-text="globalNoteRate + '%'"></span>
-                        </div>
-                        <input type="range" min="0" max="10" step="0.25" x-model="globalNoteRate" class="w-full">
-                    </div>
 
-                    <div class="glass p-6 rounded-2xl bg-red-500/5 border-red-500/10 min-w-[280px]">
-                        <div class="flex justify-between items-center mb-4">
-                            <label class="text-[10px] font-black uppercase text-red-400 tracking-widest">Global Bank Rate</label>
-                            <span class="text-3xl font-black text-white" x-text="globalBankRate + '%'"></span>
-                        </div>
-                        <input type="range" min="3" max="10" step="0.125" x-model="globalBankRate" class="w-full">
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <section class="grid lg:grid-cols-2 gap-12 mb-20 items-center">
             <div class="space-y-8">
@@ -171,6 +141,7 @@
                             <th class="p-4">Property Identity</th>
                             <th class="p-4">Purchase P.</th>
                             <th class="p-4 bg-red-500/5 text-red-400">Angela PITI</th>
+                            <th class="p-4 text-red-500">Angela Profit</th>
                             <th class="p-4 border-l border-white/10 text-sky-400">Rate %</th>
                             <th class="p-4 text-sky-400">Term</th>
                             <th class="p-4 text-sky-400">Down</th>
@@ -188,6 +159,7 @@
                                 </td>
                                 <td class="p-4"><input type="number" x-model.number="prop.price" step="5000"></td>
                                 <td class="p-4 font-mono text-slate-500 bg-red-500/[0.02]" x-text="formatCurrency(prop.currentPITI)"></td>
+                                <td class="p-4 font-mono" :class="calculateAngelaProfit(prop) > 0 ? 'text-red-400' : 'text-red-600'" x-text="formatCurrency(calculateAngelaProfit(prop))"></td>
                                 <td class="p-4 border-l border-white/10"><input type="number" x-model.number="prop.rate" :placeholder="prop.isAnchor ? globalBankRate : globalNoteRate" step="0.125"></td>
                                 <td class="p-4"><input type="number" x-model.number="prop.term" step="12"></td>
                                 <td class="p-4"><input type="number" x-model.number="prop.down" step="0.05"></td>
@@ -202,6 +174,7 @@
                             <td class="p-4 uppercase tracking-tighter text-[9px] font-black">Portfolio Totals</td>
                             <td class="p-4 font-mono" x-text="formatCurrency(totalValue)"></td>
                             <td class="p-4 font-mono bg-red-500/[0.05] text-slate-400" x-text="formatCurrency(totalCurrentPITI)"></td>
+                            <td class="p-4 font-mono text-red-400 font-bold" x-text="formatCurrency(totalAngelaProfit)"></td>
                             <td colspan="3" class="p-4 border-l border-white/10"></td>
                             <td class="p-4 font-mono text-sky-400 font-black" x-text="formatCurrency(totalNewPITIValue)"></td>
                             <td class="p-4 font-mono border-l border-white/10" :class="totalFutureCurrentCF > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(totalFutureCurrentCF)"></td>
@@ -247,6 +220,7 @@
                 },
                 calculateCurrentCF(p) { return p.currentRent - this.calculateNewPITI(p); },
                 calculateMarketCF(p) { return p.marketRent - this.calculateNewPITI(p); },
+                calculateAngelaProfit(p) { return p.currentRent - p.currentPITI; },
                 
                 get totalValue() { return this.properties.reduce((s, p) => s + p.price, 0); },
                 get totalCurrentRent() { return this.properties.reduce((s, p) => s + p.currentRent, 0); },
@@ -257,6 +231,7 @@
                 get totalNewPITIValue() { return this.properties.reduce((s, p) => s + this.calculateNewPITI(p), 0); },
                 get totalFutureCurrentCF() { return this.totalCurrentRent - this.totalNewPITIValue; },
                 get totalFutureMarketCF() { return this.totalMarketRent - this.totalNewPITIValue; },
+                get totalAngelaProfit() { return this.properties.reduce((s, p) => s + this.calculateAngelaProfit(p), 0); },
                 
                 get totalPassiveIncome() {
                     return this.properties.reduce((s, p) => {
