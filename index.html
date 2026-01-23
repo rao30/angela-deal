@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Portfolio Dashboard | Herwald Acquisition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: #f1f5f9; }
+        .glass { background: rgba(17, 17, 17, 0.85); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .accent-border { border-left: 4px solid #38bdf8; }
+        input[type="number"], select { background: #0a0a0a; border: 1px solid #333; color: #fff; padding: 4px 8px; border-radius: 6px; font-family: monospace; font-size: 11px; width: 100%; }
+        input[type="range"] { accent-color: #38bdf8; cursor: pointer; }
+        .phase-step { border-left: 2px dashed #333; position: relative; padding-left: 2rem; margin-bottom: 2rem; }
+        .phase-step::before { content: ''; position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #38bdf8; border: 4px solid #050505; }
+        
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #444; }
+    </style>
+</head>
+<body x-data="portfolioApp()">
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="h-2 w-2 rounded-full bg-sky-500 animate-pulse"></span>
+                    <span class="text-sky-500 font-bold uppercase tracking-[0.2em] text-[10px]">Phased Acquisition Strategy</span>
+                </div>
+                <h1 class="text-5xl font-extrabold text-white tracking-tighter">The Herwald Portfolio</h1>
+                <p class="text-slate-500 text-lg mt-2">Phased Buyout Logic & Multi-Year Note Income</p>
+            </div>
+            <div class="glass p-8 rounded-[2rem] text-right shadow-2xl border-sky-900/30">
+                <div class="text-[10px] uppercase text-slate-500 font-black tracking-widest mb-1">Portfolio Debt Cleared</div>
+                <div class="text-4xl font-black text-red-500 font-mono" x-text="formatCurrency(656498.25)"></div>
+            </div>
+        </header>
+
+        <!-- Global Portfolio Parameters -->
+        <section class="mb-12 glass p-8 rounded-[2.5rem] border-sky-500/20 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
+                <svg width="120" height="120" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+            </div>
+            
+            <div class="relative z-10 flex flex-col lg:flex-row items-center gap-12">
+                <div class="flex-1">
+                    <h2 class="text-3xl font-bold text-white mb-2">Portfolio Parameters</h2>
+                    <p class="text-slate-400 text-sm">Set global defaults for the portfolio. Individual property overrides can be adjusted in the ledger below.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full lg:w-auto">
+                    <div class="glass p-6 rounded-2xl bg-sky-500/5 border-sky-500/10 min-w-[280px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="text-[10px] font-black uppercase text-sky-400 tracking-widest">Global Seller Note</label>
+                            <span class="text-3xl font-black text-white" x-text="globalNoteRate + '%'"></span>
+                        </div>
+                        <input type="range" min="0" max="10" step="0.25" x-model="globalNoteRate" class="w-full">
+                    </div>
+
+                    <div class="glass p-6 rounded-2xl bg-red-500/5 border-red-500/10 min-w-[280px]">
+                        <div class="flex justify-between items-center mb-4">
+                            <label class="text-[10px] font-black uppercase text-red-400 tracking-widest">Global Bank Rate</label>
+                            <span class="text-3xl font-black text-white" x-text="globalBankRate + '%'"></span>
+                        </div>
+                        <input type="range" min="3" max="10" step="0.125" x-model="globalBankRate" class="w-full">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid lg:grid-cols-2 gap-12 mb-20 items-center">
+            <div class="space-y-8">
+                <div>
+                    <h3 class="text-3xl font-bold text-white mb-4">Strategic Advantages for You</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        This phased acquisition is engineered to maximize your total return while minimizing the friction of the transition. We focus on three core pillars:
+                    </p>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass p-4 rounded-xl border-white/5 flex gap-4 items-start">
+                        <div class="p-2 rounded-lg bg-red-500/10 text-red-500 text-xs font-bold">01</div>
+                        <div>
+                            <div class="text-sm font-bold text-white uppercase tracking-wider">Full Debt Clearance</div>
+                            <p class="text-[10px] text-slate-500 italic mt-1 leading-relaxed">I will immediately pay off the existing <span class="text-red-400 font-bold">$656,498.25</span> portfolio debt, freeing your credit and balance sheet across all phases.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass p-4 rounded-xl border-white/5 flex gap-4 items-start">
+                        <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-500 text-xs font-bold">02</div>
+                        <div>
+                            <div class="text-sm font-bold text-white uppercase tracking-wider">Cash Flow Continuity</div>
+                            <p class="text-[10px] text-slate-500 italic mt-1 leading-relaxed">Your current active management income converts directly into effortless passive note income. Guaranteed payments with zero vacancy or repair liability.</p>
+                        </div>
+                    </div>
+
+                    <div class="glass p-4 rounded-xl border-white/5 flex gap-4 items-start">
+                        <div class="p-2 rounded-lg bg-sky-500/10 text-sky-500 text-xs font-bold">03</div>
+                        <div>
+                            <div class="text-sm font-bold text-white uppercase tracking-wider">Tax Absorption Window</div>
+                            <p class="text-[10px] text-slate-500 italic mt-1 leading-relaxed">The 24-month 0% interest period for each phase is designed specifically to help you tactically manage capital gains following the sale.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass p-10 rounded-[3rem] shadow-2xl space-y-8 bg-gradient-to-br from-emerald-500/5 to-transparent border-emerald-500/10">
+                <div>
+                    <div class="flex justify-between items-end mb-2 text-emerald-400">
+                        <div class="text-[10px] font-black uppercase tracking-[0.2em]">Target Passive Yield</div>
+                        <div class="text-xs font-bold">Monthly Recurring</div>
+                    </div>
+                    <div class="text-7xl font-black text-white font-mono tracking-tighter" x-text="formatCurrency(totalPassiveIncome)"></div>
+                </div>
+                
+                <div class="space-y-6 pt-6 border-t border-white/5">
+                    <div class="flex justify-between items-center text-[10px] uppercase font-bold">
+                        <span class="text-slate-500 tracking-widest">Annual Guaranteed Income</span>
+                        <span class="text-2xl text-emerald-400 font-mono" x-text="formatCurrency(totalPassiveIncome * 12)"></span>
+                    </div>
+                    <div class="h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" style="width: 100%"></div>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-relaxed font-medium bg-white/[0.02] p-4 rounded-xl border border-white/5 italic">
+                        "Your monthly check becomes a fully guaranteed priority payment, backed by the equity of this entire 8-property portfolio."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5-Year Staggered Schedule -->
+        <section class="mb-12 glass p-10 rounded-[3rem] border-emerald-500/20 shadow-2xl relative overflow-hidden">
+            <div class="mb-8">
+                <h3 class="text-3xl font-bold text-white mb-4">Staggered Stabilization Schedule</h3>
+                <p class="text-slate-400 text-sm max-w-4xl leading-relaxed">
+                    This staggered approach is designed specifically for your benefit. By implementing a 
+                    <span class="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10">24-month 0% interest period</span> 
+                    for each acquisition phase, we provide you with a multi-year window to **absorb the tax burden** associated with the sale.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <template x-for="year in [1, 2, 3, 4, 5]">
+                    <div class="glass p-6 rounded-2xl border-white/5 bg-white/[0.02] flex flex-col justify-between transition-transform hover:scale-[1.02]">
+                        <div>
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2" x-text="'Year ' + year"></div>
+                            <div class="text-2xl font-black text-white font-mono" x-text="formatCurrency(calculateYearlyIncome(year))"></div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-white/5 text-[8px] text-slate-400 uppercase font-black leading-tight tracking-tighter" x-text="getYearLabel(year)"></div>
+                    </div>
+                </template>
+            </div>
+        </section>
+
+        <!-- Interactive Property Ledger -->
+        <section class="glass rounded-[2.5rem] overflow-hidden shadow-2xl mb-12 border-white/5">
+            <div class="p-8 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
+                <h3 class="text-2xl font-bold">Dynamic Property Ledger</h3>
+                <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Fully Interactive Session</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="text-slate-500 bg-black/40 border-b border-white/5 uppercase text-[8px] font-black tracking-widest whitespace-nowrap">
+                            <th class="p-4">Property Identity</th>
+                            <th class="p-4">Purchase P.</th>
+                            <th class="p-4 bg-red-500/5 text-red-400">Angela PITI</th>
+                            <th class="p-4 border-l border-white/10 text-sky-400">Rate %</th>
+                            <th class="p-4 text-sky-400">Term</th>
+                            <th class="p-4 text-sky-400">Down</th>
+                            <th class="p-4 text-sky-400 font-bold">New PITI</th>
+                            <th class="p-4 border-l border-white/10 text-emerald-400">Current CF</th>
+                            <th class="p-4 text-emerald-500 font-bold">Market CF</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        <template x-for="(prop, index) in properties" :key="index">
+                            <tr class="hover:bg-white/[0.02] transition-colors border-b border-white/5 text-[11px]">
+                                <td class="p-4 min-w-[180px]">
+                                    <div class="font-bold text-white mb-0.5" x-text="prop.address"></div>
+                                    <div :class="prop.isAnchor ? 'text-red-400/80' : 'text-sky-400/80'" class="text-[7px] font-black uppercase tracking-tighter" x-text="prop.isAnchor ? 'Bank Loan @ ' + (prop.rate || globalBankRate) + '%' : 'Seller Note @ ' + (prop.rate || globalNoteRate) + '%'"></div>
+                                </td>
+                                <td class="p-4"><input type="number" x-model.number="prop.price" step="5000"></td>
+                                <td class="p-4 font-mono text-slate-500 bg-red-500/[0.02]" x-text="formatCurrency(prop.currentPITI)"></td>
+                                <td class="p-4 border-l border-white/10"><input type="number" x-model.number="prop.rate" :placeholder="prop.isAnchor ? globalBankRate : globalNoteRate" step="0.125"></td>
+                                <td class="p-4"><input type="number" x-model.number="prop.term" step="12"></td>
+                                <td class="p-4"><input type="number" x-model.number="prop.down" step="0.05"></td>
+                                <td class="p-4 font-mono font-black text-sky-400" x-text="formatCurrency(calculateNewPITI(prop))"></td>
+                                <td class="p-4 font-mono border-l border-white/10" :class="calculateCurrentCF(prop) > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(calculateCurrentCF(prop))"></td>
+                                <td class="p-4 font-mono font-bold" :class="calculateMarketCF(prop) > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(calculateMarketCF(prop))"></td>
+                            </tr>
+                        </template>
+                    </tbody>
+                    <<tfoot>
+                        <tr class="bg-white/[0.03] text-white font-bold text-[11px] border-t-2 border-white/10 whitespace-nowrap">
+                            <td class="p-4 uppercase tracking-tighter text-[9px] font-black">Portfolio Totals</td>
+                            <td class="p-4 font-mono" x-text="formatCurrency(totalValue)"></td>
+                            <td class="p-4 font-mono bg-red-500/[0.05] text-slate-400" x-text="formatCurrency(totalCurrentPITI)"></td>
+                            <td colspan="3" class="p-4 border-l border-white/10"></td>
+                            <td class="p-4 font-mono text-sky-400 font-black" x-text="formatCurrency(totalNewPITIValue)"></td>
+                            <td class="p-4 font-mono border-l border-white/10" :class="totalFutureCurrentCF > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(totalFutureCurrentCF)"></td>
+                            <td class="p-4 font-mono font-black text-emerald-500" x-text="formatCurrency(totalFutureMarketCF)"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function portfolioApp() {
+            return {
+                globalNoteRate: 3.0,
+                globalBankRate: 7.0,
+                properties: [
+                    { address: '116/118 Shadybrook', phase: 1, currentPITI: 1739.22, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: true, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0.2 },
+                    { address: '141/143 Shadybrook', phase: 1, currentPITI: 1723.22, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
+                    { address: '144/146 Shadybrook', phase: 1, currentPITI: 1749.27, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
+                    { address: '125/127 Larchbrook', phase: 1, currentPITI: 1817.59, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
+                    { address: '120/122 Idlecreek', phase: 2, currentPITI: 2202.48, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
+                    { address: '800/802 Summit', phase: 2, currentPITI: 2005.17, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: true, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0.2 },
+                    { address: '804/806 Summit', phase: 2, currentPITI: 1936.05, currentRent: 2800, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
+                    { address: '1419/1421 Deborah', phase: 3, currentPITI: 1269.69, currentRent: 1800, marketRent: 2500, price: 310000, isAnchor: false, tax: 631.42, insurance: 166.67, rate: null, term: 360, down: 0 }
+                ],
+                calculateAmortization(amount, rate, term) {
+                    const r = (rate / 100) / 12;
+                    const n = term || 360;
+                    if (r === 0) return amount / n;
+                    return (amount * r) / (1 - Math.pow(1 + r, -n));
+                },
+                getRate(p) {
+                    return p.rate !== null && p.rate !== "" ? p.rate : (p.isAnchor ? this.globalBankRate : this.globalNoteRate);
+                },
+                calculateNewPI(p) {
+                    const rate = this.getRate(p);
+                    const amount = p.price * (1 - (p.down || 0));
+                    return this.calculateAmortization(amount, rate, p.term);
+                },
+                calculateNewPITI(p) {
+                    return this.calculateNewPI(p) + p.tax + p.insurance;
+                },
+                calculateCurrentCF(p) { return p.currentRent - this.calculateNewPITI(p); },
+                calculateMarketCF(p) { return p.marketRent - this.calculateNewPITI(p); },
+                
+                get totalValue() { return this.properties.reduce((s, p) => s + p.price, 0); },
+                get totalCurrentRent() { return this.properties.reduce((s, p) => s + p.currentRent, 0); },
+                get totalMarketRent() { return this.properties.reduce((s, p) => s + p.marketRent, 0); },
+                get totalCurrentPITI() { return this.properties.reduce((s, p) => s + p.currentPITI, 0); },
+                get totalNewPI() { return this.properties.reduce((s, p) => s + this.calculateNewPI(p), 0); },
+                get totalTaxIns() { return this.properties.reduce((s, p) => s + p.tax + p.insurance, 0); },
+                get totalNewPITIValue() { return this.properties.reduce((s, p) => s + this.calculateNewPITI(p), 0); },
+                get totalFutureCurrentCF() { return this.totalCurrentRent - this.totalNewPITIValue; },
+                get totalFutureMarketCF() { return this.totalMarketRent - this.totalNewPITIValue; },
+                
+                get totalPassiveIncome() {
+                    return this.properties.reduce((s, p) => {
+                        if (p.isAnchor) return s;
+                        return s + this.calculateAmortization(p.price, this.getRate(p), p.term);
+                    }, 0);
+                },
+                getYearLabel(year) {
+                    if (year === 1) return `Phase 1 Closed (0%)`;
+                    if (year === 2) return `Phase 2 Closed (P1:0%, P2:0%)`;
+                    if (year === 3) return `Phase 3 Closed (P1:${this.globalNoteRate}%, P2:0%, P3:0%)`;
+                    if (year === 4) return `P1:${this.globalNoteRate}%, P2:${this.globalNoteRate}%, P3:0%`;
+                    if (year === 5) return `Full Portfolio @ ${this.globalNoteRate}%`;
+                    return "";
+                },
+                calculateYearlyIncome(year) {
+                    return this.properties.reduce((total, p) => {
+                        if (p.isAnchor) return total;
+                        const yearsPossession = year - (p.phase - 1);
+                        if (yearsPossession <= 0) return total;
+                        const rate = yearsPossession <= 2 ? 0 : this.getRate(p);
+                        return total + this.calculateAmortization(p.price, rate, p.term);
+                    }, 0);
+                },
+                formatCurrency(v) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v); }
+            }
+        }
+    </script>
+</body>
+</html>
