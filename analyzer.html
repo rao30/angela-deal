@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investor Deal Analyzer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F3EC;
+    --cream2: #EFE9DF;
+    --cream3: #E6DDD0;
+    --ink: #1C1814;
+    --ink2: #3D342A;
+    --ink3: #6B5E52;
+    --gold: #A07840;
+    --gold2: #C49A58;
+    --gold3: #E8C98A;
+    --amber: #C47B2B;
+    --green: #3A7D5C;
+    --red: #9B3A3A;
+    --blue: #2C5282;
+    --warm-shadow: rgba(80,50,20,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 60px 32px;
+  }
+
+  /* Grain texture */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--ink3);
+    font-weight: 300;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--cream3);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 2px 24px var(--warm-shadow);
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .metric-card {
+    background: var(--cream);
+    border: 1px solid var(--cream3);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .metric-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--ink3);
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .metric-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .metric-value.success { color: var(--green); }
+  .metric-value.danger { color: var(--red); }
+  .metric-value.warning { color: var(--amber); }
+  .metric-value.accent { color: var(--gold); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+
+  th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--cream3);
+    font-size: 14px;
+  }
+
+  th {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    font-weight: 500;
+    background: var(--cream2);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .input-group label {
+    font-size: 13px;
+    color: var(--ink2);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .input-group input {
+    background: var(--cream);
+    border: 1.5px solid var(--cream3);
+    color: var(--ink);
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    transition: all 0.2s;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--gold2);
+    background: #fff;
+  }
+
+  .chart-container {
+    height: 340px;
+    margin-top: 24px;
+    position: relative;
+  }
+
+  /* Utility classes */
+  .text-right { text-align: right; }
+  .flex { display: flex; }
+  .justify-between { justify-content: space-between; }
+  .items-center { align-items: center; }
+  .mb-4 { margin-bottom: 24px; }
+  .mt-6 { margin-top: 32px; }
+
+  .table-input {
+    background: transparent;
+    border: 1.5px solid transparent;
+    border-bottom: 1.5px solid var(--cream3);
+    color: inherit;
+    font-family: inherit;
+    font-size: 14px;
+    width: 80px;
+    text-align: right;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .table-input:focus {
+    outline: none;
+    border-color: var(--gold2);
+    background: #fff;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .badge-bank { background: rgba(44,82,130,0.1); color: var(--blue); }
+  .badge-seller { background: rgba(160,120,64,0.12); color: var(--gold); }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Investor <em>Deal Analyzer</em></h1>
+    <p style="max-width:600px;margin:0 auto;">Comprehensive cashflow, return metrics, and timeline modeling for the 8-property portfolio acquisition.</p>
+  </header>
+
+  <div class="grid">
+    <!-- Main Content -->
+    <div class="main-column">
+      
+      <!-- High Level Metrics -->
+      <div class="card mb-4">
+        <h2>Portfolio Stabilization & Returns</h2>
+        <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));">
+          <div class="metric-card">
+            <div class="metric-label">Total Cash Needed</div>
+            <div class="metric-value" id="tot-cash-needed">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label">Monthly Gross Income</div>
+            <div class="metric-value success" id="tot-monthly-income">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label" title="Years 1-5 before Seller Financing ballons">Initial Mo. Cashflow</div>
+            <div class="metric-value success" id="tot-init-cashflow">—</div>
+          </div>
+          <div class="metric-card" style="background:var(--cream2)">
+            <div class="metric-label" style="color:var(--ink2)">Initial CoC</div>
+            <div class="metric-value accent" id="tot-init-coc">—</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-label" title="Years 6-10+ after Seller properties are refinanced">Post-Refi Mo. Cashflow</div>
+            <div class="metric-value success" id="tot-refi-cashflow">—</div>
+          </div>
+          <div class="metric-card" style="background:var(--cream2)">
+            <div class="metric-label" style="color:var(--ink2)">Post-Refi CoC</div>
+            <div class="metric-value accent" id="tot-refi-coc">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Properties Table -->
+      <div class="card mb-4">
+        <div class="flex justify-between items-center mb-4">
+          <h2>Property Breakdown</h2>
+          <span class="badge">Dynamic</span>
+        </div>
+        <div style="overflow-x: auto;">
+          <table id="properties-table">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>Role</th>
+                <th class="text-right">Price</th>
+                <th class="text-right">Current Bal</th>
+                <th class="text-right">Cur Pmt</th>
+                <th class="text-right">Cur Rent</th>
+                <th class="text-right">New Rent</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Individual Loan Modeling -->
+      <div class="card mb-4">
+        <div class="flex justify-between items-center mb-4">
+          <h2>10-Year Loan & Pmt Matrix</h2>
+          <span class="badge">Individual Modeling</span>
+        </div>
+        <p style="font-size:13px; margin-bottom: 16px;">Shows the active monthly payment for each property over time. Notice the seller-financed (SF) loans start at 0% down / 0% interest and then jump when refinanced at year 5.</p>
+        <div style="overflow-x: auto;">
+          <table id="loans-table" style="font-size:12px;">
+            <thead>
+              <tr id="loans-head">
+                <!-- Injected via JS -->
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Year by Year Cashflow Chart -->
+      <div class="card">
+        <h2>10-Year Cashflow Projection</h2>
+        <p style="font-size:13px; margin-bottom: 16px;">Models the phased acquisition (2 properties/yr), renovation period (reduced rent for 3 months), and balloon payoffs.</p>
+        <div class="chart-container">
+          <canvas id="cashflowChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar / Inputs -->
+    <div class="sidebar">
+      
+      <!-- Angela's Payouts Table -->
+      <div class="card mb-4">
+        <h2>Angela's Payouts (Validation)</h2>
+        <p style="font-size:12px;margin-bottom:12px;">This proves the bank loan covers both her existing debts for the pairing, leaving her with cash.</p>
+        <table id="angela-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th class="text-right">Bank Checks</th>
+              <th class="text-right">Debts Paid</th>
+              <th class="text-right">Closing Costs</th>
+              <th class="text-right">Net Cash</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Global Assumptions -->
+      <div class="card mb-4">
+        <h2>Global Assumptions</h2>
+        
+        <div class="input-group">
+          <label title="Interest rate roughly for the commercial/bank loans used to buy the 'bank' half of the deal and the refi's later">Bank / Refi Rate (%)</label>
+          <input type="number" id="inp-bank-rate" value="6.5" step="0.1" oninput="calculateModel()">
+        </div>
+        
+        <div class="input-group">
+          <label title="Down payment required for the commercial/bank loans (Seller loans are 0% down)">Bank Down Payment (%)</label>
+          <input type="number" id="inp-bank-down" value="20" step="1" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="The length of the amortization period for the 0% down seller loans">Seller Finance Amortization (Yrs)</label>
+          <input type="number" id="inp-sf-amort" value="20" step="1" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="When the balloon refi is due on the seller financed properties">Seller Finance Balloon (Yrs)</label>
+          <input type="number" id="inp-sf-balloon" value="5" step="1" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="Estimated rehab costs per property to achieve the new rents">Rehab Per Property ($)</label>
+          <input type="number" id="inp-rehab-cost" value="30000" step="1000" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="Closing costs as a percentage of purchase price (you cover hers too)">Total Closing Costs (%)</label>
+          <input type="number" id="inp-closing-costs" value="2.5" step="0.1" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="Annual property tax rate (e.g. 2.2% in Texas)">Annual Tax Rate (%)</label>
+          <input type="number" id="inp-tax-rate" value="2.2" step="0.1" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="Average annual property insurance per property">Annual Insurance ($)</label>
+          <input type="number" id="inp-ins-yr" value="1500" step="100" oninput="calculateModel()">
+        </div>
+
+        <div class="input-group">
+          <label title="Percentage of gross rents set aside for vacancy, maintenance, and CapEx reserves">Vacancy & CapEx / Maint (%)</label>
+          <input type="number" id="inp-vacancy-maint" value="10" step="1" oninput="calculateModel()">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Phase Summary (Cash Required)</h2>
+        <table id="phase-table">
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th class="text-right">Down Pmt + Closing</th>
+              <th class="text-right">Rehab</th>
+              <th class="text-right">Total Cash</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// Format currency
+function fmt(n) {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+}
+
+// Format percent
+function fmtPct(n) {
+  return (n * 100).toFixed(1) + '%';
+}
+
+// Raw data
+const rawData = [
+  // pair 1
+  { pair: 1, type: "bank", addr: "116/118 Shadybrook", bal: 73937.15, pmt: 1739.22, curRent: 2600.00, newRent: 3600, price: 410000 },
+  { pair: 1, type: "seller", addr: "141/143 Shadybrook", bal: 69246.44, pmt: 1723.22, curRent: 2600.00, newRent: 3600, price: 410000 },
+  // pair 2
+  { pair: 2, type: "bank", addr: "144/146 Shadybrook", bal: 76637.59, pmt: 1749.27, curRent: 2600.00, newRent: 3600, price: 410000 },
+  { pair: 2, type: "seller", addr: "125/127 Larchbrook", bal: 72245.79, pmt: 1817.59, curRent: 2600.00, newRent: 3600, price: 410000 },
+  // pair 3
+  { pair: 3, type: "bank", addr: "120/122 Idlecreek", bal: 81947.65, pmt: 2202.48, curRent: 2600.00, newRent: 3600, price: 410000 },
+  { pair: 3, type: "seller", addr: "800/802 Summit", bal: 130972.34, pmt: 2005.17, curRent: 2600.00, newRent: 3600, price: 410000 },
+  // pair 4
+  { pair: 4, type: "bank", addr: "804/806 Summit", bal: 99764.90, pmt: 1936.05, curRent: 2800.00, newRent: 3600, price: 410000 },
+  { pair: 4, type: "seller", addr: "1419/1421 Deborah", bal: 51746.39, pmt: 1269.69, curRent: 1800.00, newRent: 3000, price: 310000 }
+];
+
+let chartInstance = null;
+
+function pmt(rate, nper, pv) {
+  if (rate === 0) return -(pv / nper);
+  return -(rate * pv) / (1 - Math.pow(1 + rate, -nper));
+}
+
+function updateRawData(index, field, val) {
+  rawData[index][field] = Number(val);
+  calculateModel();
+}
+
+function calculateModel() {
+  // Get inputs
+  const bankRate = parseFloat(document.getElementById('inp-bank-rate').value) / 100;
+  const bankDownPct = parseFloat(document.getElementById('inp-bank-down').value) / 100;
+  const rehabPerProp = parseFloat(document.getElementById('inp-rehab-cost').value);
+  const closingCostsPct = parseFloat(document.getElementById('inp-closing-costs').value) / 100;
+  const taxRate = parseFloat(document.getElementById('inp-tax-rate').value) / 100;
+  const annualInsurance = parseFloat(document.getElementById('inp-ins-yr').value);
+  const vacMaintPct = parseFloat(document.getElementById('inp-vacancy-maint').value) / 100;
+
+  // Seller finance parameters
+  const sfAmortYears = parseFloat(document.getElementById('inp-sf-amort').value);
+  const sfBalloonYears = parseFloat(document.getElementById('inp-sf-balloon').value);
+  const sfAmortMonths = sfAmortYears * 12;
+  const sfBalloonMonths = sfBalloonYears * 12;
+
+  let totalCashNeeded = 0;
+  let totalMonthlyGross = 0;
+  let totalInitMonthlyNetCashflow = 0;
+  let totalRefiMonthlyNetCashflow = 0;
+  
+  const phaseData = { 1: {dp:0, rehab:0}, 2: {dp:0, rehab:0}, 3: {dp:0, rehab:0}, 4: {dp:0, rehab:0} };
+  const yearCashflows = new Array(11).fill(0); // Year 0 to 10
+
+  // For loan matrix
+  const propertyLoanTracking = [];
+
+  const tbodyHtml = rawData.map((p, i) => {
+    // Total closing cost for this property is based on its price.
+    const propertyClosingCost = p.price * closingCostsPct;
+
+    let initialMonthlyDebt = 0;
+    let refiMonthlyDebt = 0;
+    let downPayment = 0;
+    let bankLoanAmt = 0;
+
+    if (p.type === 'bank') {
+      downPayment = p.price * bankDownPct;
+      bankLoanAmt = p.price - downPayment;
+      initialMonthlyDebt = Math.abs(pmt(bankRate / 12, 360, bankLoanAmt));
+      refiMonthlyDebt = initialMonthlyDebt; // Stays the same forever
+    } else {
+      // Seller financed at 0% down, 0% interest over X years
+      initialMonthlyDebt = p.price / sfAmortMonths; 
+      
+      const remainingBal = p.price - (initialMonthlyDebt * sfBalloonMonths);
+      refiMonthlyDebt = Math.abs(pmt(bankRate / 12, 360, remainingBal));
+    }
+
+    const propCashNeeded = downPayment + propertyClosingCost + rehabPerProp;
+    totalCashNeeded += propCashNeeded;
+    
+    phaseData[p.pair].dp += (downPayment + propertyClosingCost);
+    phaseData[p.pair].rehab += rehabPerProp;
+
+    // Fixed / Variable Expenses calculation
+    const monthlyPropTax = (p.price * taxRate) / 12;
+    const monthlyInsurance = annualInsurance / 12;
+    const monthlyVacMaint = p.newRent * vacMaintPct;
+    
+    // TI + Vacancy/CapEx
+    const totalMonthlyExpenses = monthlyPropTax + monthlyInsurance + monthlyVacMaint;
+    
+    const initialMonthlyNetCashflow = p.newRent - totalMonthlyExpenses - initialMonthlyDebt;
+    const refiMonthlyNetCashflow = p.newRent - totalMonthlyExpenses - refiMonthlyDebt;
+    
+    totalMonthlyGross += p.newRent;
+    totalInitMonthlyNetCashflow += initialMonthlyNetCashflow;
+    totalRefiMonthlyNetCashflow += refiMonthlyNetCashflow;
+
+    let loanPaymentsByYear = new Array(11).fill(0);
+
+    for (let y = 1; y <= 10; y++) {
+      if (y < p.pair) continue; // Not acquired yet
+
+      let activeMonths = 12;
+      let netForYear = 0;
+      let currentMonthlyDebt = initialMonthlyDebt;
+
+      if (y === p.pair) {
+        activeMonths = 9; // 3 months of rehab timeframe
+        netForYear -= propCashNeeded; // Capital outlays
+      }
+      
+      const annualGross = p.newRent * activeMonths;
+      const annualExpenses = (monthlyPropTax * 12) + (monthlyInsurance * 12) + (p.newRent * activeMonths * vacMaintPct); // Vacancy/Maint only hit when operating
+      
+      // Handle the balloon payoff / refi for Seller Finance
+      if (p.type === 'seller') {
+        if (y === (p.pair + sfBalloonYears)) {
+          // Calculate the EXACT remaining balance based on the payments made during balloon term
+          const remainingBal = p.price - (initialMonthlyDebt * sfBalloonMonths);
+          const newRefiDebt = Math.abs(pmt(bankRate / 12, 360, remainingBal));
+          
+          // Split the year based on balloon maturity (we'll just assume half year for simplicity if it hits mid-year, or full new debt if the balloon triggered completely)
+          // For a standard 5 year balloon, we assume year 6 is half-old / half-new for a smooth transition, but this is an abstraction.
+          const blendedAnnualDebt = (initialMonthlyDebt * 6) + (newRefiDebt * 6);
+          netForYear += (annualGross - annualExpenses - blendedAnnualDebt);
+          currentMonthlyDebt = newRefiDebt; // Display latest rate
+          
+        } else if (y > (p.pair + sfBalloonYears)) {
+          const remainingBal = p.price - (initialMonthlyDebt * sfBalloonMonths);
+          const newRefiDebt = Math.abs(pmt(bankRate / 12, 360, remainingBal));
+          netForYear += (annualGross - annualExpenses - (newRefiDebt * 12));
+          currentMonthlyDebt = newRefiDebt;
+        } else {
+          // Still in the 0% period
+          netForYear += (annualGross - annualExpenses - (initialMonthlyDebt * 12));
+        }
+      } else {
+        // Standard bank loan always has fixed initial monthly debt
+        netForYear += (annualGross - annualExpenses - (initialMonthlyDebt * 12));
+      }
+
+      yearCashflows[y] += netForYear;
+      loanPaymentsByYear[y] = currentMonthlyDebt;
+    }
+
+    propertyLoanTracking.push({
+      addr: p.addr,
+      type: p.type,
+      pair: p.pair,
+      paymentsByYear: loanPaymentsByYear
+    });
+
+    return `
+      <tr>
+        <td><strong>${p.addr}</strong><br><span style="font-size:11px;color:var(--text-secondary)">Phase ${p.pair}</span></td>
+        <td><span class="badge ${p.type === 'bank' ? 'badge-bank' : 'badge-seller'}">${p.type === 'bank' ? 'Bank Purchase' : 'You Finance'}</span></td>
+        <td class="text-right"><input type="number" class="table-input" value="${p.price}" step="1000" onchange="updateRawData(${i}, 'price', this.value)" style="width: 90px;"></td>
+        <td class="text-right" style="color:var(--ink3)">${fmt(p.bal)}</td>
+        <td class="text-right" style="color:var(--ink3)">${fmt(p.pmt)}</td>
+        <td class="text-right"><input type="number" class="table-input" value="${p.curRent}" step="50" onchange="updateRawData(${i}, 'curRent', this.value)"></td>
+        <td class="text-right"><input type="number" class="table-input" value="${p.newRent}" step="50" onchange="updateRawData(${i}, 'newRent', this.value)" style="color:var(--green);font-weight:600;"></td>
+      </tr>
+    `;
+  }).join('');
+
+  // Angela's validation table (Are we covering her debts?)
+  const angelaData = { 1: {bankCheck:0, debtsPaid:0, closing: 0, net:0}, 2: {bankCheck:0, debtsPaid:0, closing: 0, net:0}, 3: {bankCheck:0, debtsPaid:0, closing: 0, net:0}, 4: {bankCheck:0, debtsPaid:0, closing: 0, net:0} };
+  rawData.forEach(p => {
+    if (p.type === 'bank') {
+      // The bank wires her the full purchase price
+      angelaData[p.pair].bankCheck += p.price;
+    }
+    // She pays off BOTH underlying debts in the pair
+    angelaData[p.pair].debtsPaid += p.bal;
+  });
+  
+  Object.keys(angelaData).forEach(k => {
+    // Minus closing costs from bank check (she covers closing costs)
+    const bankPrice = rawData.find(x => x.pair == k && x.type === 'bank').price;
+    const closingFees = bankPrice * closingCostsPct;
+    angelaData[k].closing = closingFees;
+    angelaData[k].net = angelaData[k].bankCheck - angelaData[k].debtsPaid - closingFees;
+  });
+
+  document.querySelector('#angela-table tbody').innerHTML = Object.keys(angelaData).map(k => `
+    <tr>
+      <td>Year ${k}</td>
+      <td class="text-right" style="color:var(--green)">+${fmt(angelaData[k].bankCheck)}</td>
+      <td class="text-right" style="color:var(--red)">-${fmt(angelaData[k].debtsPaid)}</td>
+      <td class="text-right" style="color:var(--red)">-${fmt(angelaData[k].closing)}</td>
+      <td class="text-right" style="font-weight:600; color:var(--gold);">${fmt(angelaData[k].net)}</td>
+    </tr>
+  `).join('');
+
+  // Loan matrix formatting
+  let matrixHeadHtml = `<th>Property</th><th>Type</th>`;
+  for(let y=1; y<=10; y++) matrixHeadHtml += `<th class="text-right">Yr ${y}</th>`;
+  document.getElementById('loans-head').innerHTML = matrixHeadHtml;
+
+  const matrixBodyHtml = propertyLoanTracking.map(p => {
+    let row = `<tr>
+      <td>${p.addr}</td>
+      <td><span class="badge ${p.type === 'bank' ? 'badge-bank' : 'badge-seller'}">${p.type === 'bank' ? 'Bank Purchase' : 'You Finance'}</span></td>`;
+    
+    for(let y=1; y<=10; y++) {
+      const pmt = p.paymentsByYear[y];
+      const isRefiYear = p.type === 'seller' && y >= (p.pair + sfBalloonYears);
+      if (pmt === 0) {
+        row += `<td class="text-right" style="color:var(--cream3)">-</td>`;
+      } else {
+        row += `<td class="text-right" style="${isRefiYear ? 'color:var(--red);font-weight:600;' : ''}">${fmt(pmt)}</td>`;
+      }
+    }
+    row += `</tr>`;
+    return row;
+  }).join('');
+  document.querySelector('#loans-table tbody').innerHTML = matrixBodyHtml;
+
+  let initAnnualNetCashflow = totalInitMonthlyNetCashflow * 12;
+  let initOverallCoC = totalCashNeeded > 0 ? (initAnnualNetCashflow / totalCashNeeded) : 0;
+
+  let refiAnnualNetCashflow = totalRefiMonthlyNetCashflow * 12;
+  let refiOverallCoC = totalCashNeeded > 0 ? (refiAnnualNetCashflow / totalCashNeeded) : 0;
+
+  document.getElementById('tot-cash-needed').textContent = fmt(totalCashNeeded);
+  document.getElementById('tot-monthly-income').textContent = fmt(totalMonthlyGross);
+  document.getElementById('tot-init-cashflow').textContent = fmt(totalInitMonthlyNetCashflow);
+  document.getElementById('tot-init-coc').textContent = fmtPct(initOverallCoC);
+  document.getElementById('tot-refi-cashflow').textContent = fmt(totalRefiMonthlyNetCashflow);
+  document.getElementById('tot-refi-coc').textContent = fmtPct(refiOverallCoC);
+
+  document.querySelector('#properties-table tbody').innerHTML = tbodyHtml;
+
+  document.querySelector('#phase-table tbody').innerHTML = Object.keys(phaseData).map(k => `
+    <tr>
+      <td>Year ${k}</td>
+      <td class="text-right">${fmt(phaseData[k].dp)}</td>
+      <td class="text-right">${fmt(phaseData[k].rehab)}</td>
+      <td class="text-right" style="font-weight:600">${fmt(phaseData[k].dp + phaseData[k].rehab)}</td>
+    </tr>
+  `).join('');
+
+  const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(y => `Year ${y}`);
+  const data = yearCashflows.slice(1);
+  const colors = data.map(v => v < 0 ? 'var(--red)' : 'var(--green)');
+
+  // Setting defaults for chart fonts
+  Chart.defaults.color = '#6B5E52';
+  Chart.defaults.font.family = "'DM Sans', sans-serif";
+
+  if (chartInstance) {
+    chartInstance.data.datasets[0].data = data;
+    chartInstance.data.datasets[0].backgroundColor = colors;
+    chartInstance.update();
+  } else {
+    const ctx = document.getElementById('cashflowChart').getContext('2d');
+    chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Net Cashflow (Incl. capital expenses)',
+          data: data,
+          backgroundColor: colors,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return fmt(context.raw);
+              }
+            }
+          }
+        },
+        scales: {
+          y: {
+            grid: { color: 'var(--cream3)' },
+            ticks: { callback: value => fmt(value), color: 'var(--ink3)' }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { color: 'var(--ink3)' }
+          }
+        }
+      }
+    });
+  }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', calculateModel);
+
+</script>
+</body>
+</html>

@@ -903,6 +903,7 @@
   <div class="nav-dot" data-label="Your Income" onclick="document.getElementById('s-income').scrollIntoView({behavior:'smooth'})"></div>
   <div class="nav-dot" data-label="Your Total" onclick="document.getElementById('s-total').scrollIntoView({behavior:'smooth'})"></div>
   <div class="nav-dot" data-label="Your Prices" onclick="document.getElementById('s-prices').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" data-label="Savings" onclick="document.getElementById('s-savings').scrollIntoView({behavior:'smooth'})"></div>
   <div class="nav-dot" data-label="Protections" onclick="document.getElementById('s-protection').scrollIntoView({behavior:'smooth'})"></div>
   <div class="nav-dot" data-label="FAQ" onclick="document.getElementById('s-faq').scrollIntoView({behavior:'smooth'})"></div>
 </nav>
@@ -920,7 +921,7 @@
     Your timeline. Your price. A check arriving every month.
   </p>
   <div class="fade-up fade-up-4" style="background:rgba(160,120,64,0.08);border:1px solid rgba(160,120,64,0.2);border-radius:10px;padding:14px 22px;font-size:13px;color:var(--ink3);max-width:480px;line-height:1.7;margin-bottom:8px;">
-    &#x1F4DD; <strong style="color:var(--ink2);">A note on the numbers:</strong> The prices here are estimates. When we sit down, you tell me what you want for each home and I plug your numbers in. Everything on this page updates. Scroll down to <em>&#8220;Your Prices&#8221;</em> to try it now.
+    &#x1F4DD; <strong style="color:var(--ink2);">A note on the numbers:</strong> The prices here are estimates. When we sit down, you tell me what you want for each home and I plug your numbers in. Everything on this page updates.
   </div>
   <div class="hero-scroll fade-up fade-up-5">scroll</div>
 </section>
@@ -1049,6 +1050,52 @@
     <div class="price-summary" id="priceSummary"></div>
   </div>
 </div>
+
+
+<!-- ══════════════════════════════════
+     SAVINGS
+══════════════════════════════════ -->
+<section id="s-savings">
+  <div class="container">
+    <div class="section-label fade-up" style="color:var(--green);">The Bottom Line</div>
+    <h2 class="section-title fade-up">Keeping more of<br><em>your own money.</em></h2>
+    <p class="lead fade-up">
+      Traditional sales bleed your equity through commissions, repairs, and empty-house costs. Skipping the market saves you tens of thousands per property.
+    </p>
+
+    <!-- Key numbers row -->
+    <div class="fade-up fade-up-1" style="display:flex;flex-wrap:wrap;gap:40px;margin-top:24px;">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--green);font-weight:300;line-height:1;" id="sav-total">—</div>
+        <div style="font-size:11px;color:var(--ink3);letter-spacing:0.1em;text-transform:uppercase;margin-top:8px;">Estimated Total Equity Kept</div>
+      </div>
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--green);font-weight:300;line-height:1;" id="sav-per-prop">—</div>
+        <div style="font-size:11px;color:var(--ink3);letter-spacing:0.1em;text-transform:uppercase;margin-top:8px;">Average Kept Per Property</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:24px;margin-top:40px;">
+      <div class="fade-up fade-up-2" style="background:#fff;border:1px solid var(--cream3);border-radius:16px;padding:32px;box-shadow:0 2px 14px var(--warm-shadow);">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--ink);margin-bottom:16px;">The Old Way</h3>
+        <ul style="list-style:none;color:var(--ink3);font-size:15px;line-height:1.8;">
+          <li style="margin-bottom:12px;"><span style="color:var(--red);margin-right:8px;">✗</span> <strong>6% Agent Commissions</strong></li>
+          <li style="margin-bottom:12px;"><span style="color:var(--red);margin-right:8px;">✗</span> <strong>Make-Ready Costs</strong> (paint, staging, repairs)</li>
+          <li style="margin-bottom:12px;"><span style="color:var(--red);margin-right:8px;">✗</span> <strong>Holding Costs</strong> (taxes during sale)</li>
+        </ul>
+      </div>
+
+      <div class="fade-up fade-up-3" style="background:var(--green-light);border:1px solid rgba(58,125,92,0.2);border-radius:16px;padding:32px;">
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--green);margin-bottom:16px;">Selling To Me</h3>
+        <ul style="list-style:none;color:var(--ink2);font-size:15px;line-height:1.8;">
+          <li style="margin-bottom:12px;"><span style="color:var(--green);font-weight:bold;margin-right:8px;">✓</span> <strong>Zero Agent Fees</strong> (you keep the 6%)</li>
+          <li style="margin-bottom:12px;"><span style="color:var(--green);font-weight:bold;margin-right:8px;">✓</span> <strong>Zero Make-Ready</strong> (I buy exactly as-is)</li>
+          <li style="margin-bottom:12px;"><span style="color:var(--green);font-weight:bold;margin-right:8px;">✓</span> <strong>Instant Timeline</strong> (no holding costs)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
 
 
 <!-- ══════════════════════════════════
@@ -1625,7 +1672,7 @@ function initObserver() {
 
 // ── Nav dot updater ──
 function initNavDots() {
-  const sections = ['s-hero','s-overview','s-how','s-income','s-total','s-prices','s-protection','s-faq'];
+  const sections = ['s-hero','s-overview','s-how','s-income','s-total','s-prices','s-savings','s-protection','s-faq'];
   const dots = document.querySelectorAll('.nav-dot');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -1993,6 +2040,13 @@ function buildCostSection() {
       </div>
     </div>`;
   }
+
+  // Update savings section numbers
+  const savTotalEl = document.getElementById('sav-total');
+  if (savTotalEl) savTotalEl.textContent = fmt(totTotal);
+
+  const savPerPropEl = document.getElementById('sav-per-prop');
+  if (savPerPropEl && ALL_PROPS.length > 0) savPerPropEl.textContent = fmt(totTotal / ALL_PROPS.length);
 }
 
 // ── Init ──
