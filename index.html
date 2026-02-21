@@ -1,286 +1,1864 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executive Portfolio Dashboard | Herwald Acquisition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #050505; color: #f1f5f9; }
-        .glass { background: rgba(17, 17, 17, 0.85); backdrop-filter: blur(24px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .accent-border { border-left: 4px solid #38bdf8; }
-        input[type="number"], select { background: #1a1a1a; border: 1.5px solid #404040; color: #fff; padding: 8px 12px; border-radius: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 500; width: 100%; min-width: 70px; transition: all 0.2s ease; }
-        input[type="number"]:focus, select:focus { outline: none; border-color: #38bdf8; background: #0f0f0f; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.1); }
-        input[type="number"]:hover { border-color: #505050; }
-        /* Hide number input spinners */
-        input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"] { -moz-appearance: textfield; }
-        input[type="range"] { accent-color: #38bdf8; cursor: pointer; }
-        .phase-step { border-left: 2px dashed #333; position: relative; padding-left: 2rem; margin-bottom: 2rem; }
-        .phase-step::before { content: ''; position: absolute; left: -9px; top: 0; width: 16px; height: 16px; border-radius: 50%; background: #38bdf8; border: 4px solid #050505; }
-        
-        /* Custom scrollbar for better aesthetics */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #444; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Proposal for Angela</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F7F3EC;
+    --cream2: #EFE9DF;
+    --cream3: #E6DDD0;
+    --ink: #1C1814;
+    --ink2: #3D342A;
+    --ink3: #6B5E52;
+    --gold: #A07840;
+    --gold2: #C49A58;
+    --gold3: #E8C98A;
+    --amber: #C47B2B;
+    --gold-light: rgba(160,120,64,0.10);
+    --green: #3A7D5C;
+    --green-light: rgba(58,125,92,0.10);
+    --red: #9B3A3A;
+    --blue: #2C5282;
+    --warm-shadow: rgba(80,50,20,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Grain texture ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6;
+  }
+
+  /* ── Typography ── */
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .mono  { font-family: 'DM Mono', monospace; }
+
+  /* ── Layout ── */
+  .container { max-width: 760px; margin: 0 auto; padding: 0 32px; }
+  .container-wide { max-width: 1000px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes drawLine {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-8px); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .fade-up { animation: fadeUp 0.8s ease forwards; opacity: 0; }
+  .fade-up-1 { animation-delay: 0.1s; }
+  .fade-up-2 { animation-delay: 0.25s; }
+  .fade-up-3 { animation-delay: 0.4s; }
+  .fade-up-4 { animation-delay: 0.55s; }
+  .fade-up-5 { animation-delay: 0.7s; }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    padding: 80px 32px;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 30%, rgba(160,120,64,0.08) 0%, transparent 70%),
+      var(--cream);
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 1px;
+    background: var(--gold3);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(52px, 8vw, 96px);
+    font-weight: 300;
+    line-height: 0.95;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: -0.01em;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--ink3);
+    max-width: 480px;
+    margin: 24px auto 48px;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--ink3);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: float 2.5s ease-in-out infinite;
+  }
+  .hero-scroll::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold3), transparent);
+  }
+
+  /* ── Section ── */
+  section {
+    padding: 100px 0;
+  }
+  section:nth-child(even) {
+    background: var(--cream2);
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 24px;
+  }
+  .section-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .lead {
+    font-size: 18px;
+    color: var(--ink2);
+    line-height: 1.8;
+    font-weight: 300;
+    margin-bottom: 20px;
+    max-width: 620px;
+  }
+
+  .body-text {
+    font-size: 15px;
+    color: var(--ink3);
+    line-height: 1.85;
+    margin-bottom: 16px;
+    max-width: 620px;
+  }
+
+  /* ── Big number display ── */
+  .big-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(64px, 10vw, 110px);
+    font-weight: 300;
+    line-height: 1;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+  }
+  .big-number-label {
+    font-size: 13px;
+    color: var(--ink3);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-weight: 400;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold3);
+    margin: 36px 0;
+    transform-origin: left;
+    animation: drawLine 1s ease forwards;
+  }
+
+  /* ── Step cards — timeline ── */
+  .timeline {
+    position: relative;
+    padding-left: 0;
+    margin-top: 48px;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    margin-bottom: 60px;
+    position: relative;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 39px;
+    top: 60px;
+    bottom: -30px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold3), transparent);
+  }
+  .timeline-item:last-child::before { display: none; }
+
+  .timeline-year {
+    text-align: center;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .year-bubble {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #fff;
+    margin: 0 auto 6px;
+    box-shadow: 0 4px 20px rgba(160,120,64,0.25);
+  }
+
+  .year-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .timeline-content {
+    background: #fff;
+    border: 1px solid var(--cream3);
+    border-radius: 16px;
+    padding: 28px 32px;
+    box-shadow: 0 2px 24px var(--warm-shadow);
+    position: relative;
+  }
+
+  .timeline-content::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 20px;
+    width: 16px;
+    height: 16px;
+    background: #fff;
+    border: 1px solid var(--cream3);
+    border-right: none;
+    border-top: none;
+    transform: rotate(45deg);
+  }
+
+  .timeline-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .tag-bank   { background: rgba(44,82,130,0.1);  color: var(--blue); }
+  .tag-seller { background: rgba(160,120,64,0.12); color: var(--gold); }
+  .tag-refi   { background: rgba(58,125,92,0.1);  color: var(--green); }
+  .tag-income { background: rgba(160,120,64,0.12); color: var(--gold); }
+
+  .timeline-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.2;
+  }
+
+  .timeline-body {
+    font-size: 14.5px;
+    color: var(--ink3);
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .money-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .money-pill {
+    background: var(--cream);
+    border: 1px solid var(--cream3);
+    border-radius: 10px;
+    padding: 10px 16px;
+    text-align: center;
+  }
+  .money-pill-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--gold);
+  }
+  .money-pill-label {
+    font-size: 10px;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 3px;
+  }
+
+  /* ── Analogy boxes ── */
+  .analogy-box {
+    background: linear-gradient(135deg, rgba(160,120,64,0.06), rgba(160,120,64,0.02));
+    border: 1px solid rgba(160,120,64,0.2);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin: 28px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .analogy-box::before {
+    content: '"';
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 160px;
+    color: rgba(160,120,64,0.08);
+    position: absolute;
+    top: -20px;
+    left: 16px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .analogy-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink2);
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  .analogy-caption {
+    font-size: 13px;
+    color: var(--ink3);
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Income summary table ── */
+  .income-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 24px;
+  }
+  .income-table th {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    font-weight: 500;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--cream3);
+    background: var(--cream2);
+  }
+  .income-table th:last-child { text-align: right; }
+  .income-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    color: var(--ink2);
+    border-bottom: 1px solid var(--cream3);
+    vertical-align: top;
+  }
+  .income-table td:last-child {
+    text-align: right;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--gold);
+  }
+  .income-table tr:last-child td {
+    border-bottom: none;
+    font-weight: 600;
+    color: var(--ink);
+    background: rgba(160,120,64,0.06);
+  }
+  .income-table tr:last-child td:last-child {
+    color: var(--green);
+    font-size: 28px;
+  }
+  .income-sub {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-top: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+  }
+
+  /* ── Protection list ── */
+  .protection-list {
+    list-style: none;
+    margin-top: 24px;
+  }
+  .protection-list li {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--cream3);
+    font-size: 15px;
+    color: var(--ink2);
+    line-height: 1.65;
+  }
+  .protection-list li:last-child { border-bottom: none; }
+  .protection-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .protection-icon.gold { background: var(--gold-light); }
+
+  /* ── Total summary hero strip ── */
+  .total-strip {
+    background: var(--ink);
+    color: #fff;
+    padding: 80px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .total-strip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(160,120,64,0.15), transparent 70%);
+    pointer-events: none;
+  }
+  .total-strip-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold3);
+    margin-bottom: 16px;
+  }
+  .total-strip-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(72px, 12vw, 130px);
+    font-weight: 300;
+    line-height: 1;
+    color: #fff;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 30%, var(--gold3) 70%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .total-strip-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 12px;
+    font-weight: 300;
+  }
+  .total-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-top: 56px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .total-cell {
+    padding: 28px 24px;
+    background: rgba(255,255,255,0.02);
+    text-align: center;
+  }
+  .total-cell-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: var(--gold3);
+    line-height: 1;
+  }
+  .total-cell-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-top: 8px;
+    line-height: 1.4;
+  }
+
+  /* ── Q&A / FAQ ── */
+  .faq-item {
+    border-bottom: 1px solid var(--cream3);
+    padding: 24px 0;
+  }
+  .faq-q {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .faq-a {
+    font-size: 15px;
+    color: var(--ink3);
+    line-height: 1.8;
+  }
+
+  /* ── Closing ── */
+  .closing {
+    padding: 100px 32px;
+    text-align: center;
+    background: var(--cream);
+  }
+  .closing-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(40px, 6vw, 64px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--ink);
+    max-width: 600px;
+    margin: 0 auto 24px;
+    line-height: 1.2;
+  }
+  .closing-body {
+    font-size: 16px;
+    color: var(--ink3);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+  .closing-sig {
+    margin-top: 56px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* ── Nav dot ── */
+  .nav-dots {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cream3);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .nav-dot.active {
+    background: var(--gold);
+    transform: scale(1.4);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .timeline-item { grid-template-columns: 60px 1fr; gap: 16px; }
+    .timeline-content { padding: 20px; }
+    .container, .container-wide { padding: 0 20px; }
+  }
+
+  /* ── Price editor ── */
+  .price-editor {
+    background: var(--cream2);
+    padding: 100px 0;
+  }
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 36px;
+  }
+  .price-card {
+    background: #fff;
+    border: 1px solid var(--cream3);
+    border-radius: 14px;
+    padding: 22px 24px;
+    box-shadow: 0 2px 16px var(--warm-shadow);
+    transition: box-shadow 0.2s;
+  }
+  .price-card:hover { box-shadow: 0 4px 28px var(--warm-shadow); }
+  .price-card-pair {
+    font-family: 'DM Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .price-card-addr {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .price-card-role {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .role-bank   { background: rgba(44,82,130,0.08); color: var(--blue); }
+  .role-seller { background: rgba(160,120,64,0.10); color: var(--gold); }
+  .price-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1.5px solid var(--cream3);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    background: var(--cream);
+  }
+  .price-input-wrap:focus-within {
+    border-color: var(--gold2);
+    background: #fff;
+  }
+  .price-input-prefix {
+    padding: 10px 12px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--gold);
+    background: transparent;
+    border-right: 1px solid var(--cream3);
+    line-height: 1;
+  }
+  .price-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 10px 12px;
+    outline: none;
+    min-width: 0;
+  }
+  .price-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .price-card-result {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: var(--ink3);
+    line-height: 1.8;
+    padding-top: 12px;
+    border-top: 1px solid var(--cream3);
+  }
+  .price-card-result strong { color: var(--gold); }
+  .price-summary {
+    background: var(--ink);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap: 24px;
+    text-align: center;
+  }
+  .ps-cell-amount {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--gold3);
+    line-height: 1;
+  }
+  .ps-cell-label {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 7px;
+    line-height: 1.5;
+  }
+  .reset-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1.5px solid var(--cream3);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink3);
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+  }
+  .reset-btn:hover { border-color: var(--gold2); color: var(--gold); }
+
+</style>
 </head>
-<body x-data="portfolioApp()">
-    <div class="max-w-7xl mx-auto px-6 py-12">
-        
-        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
-            <div>
-                <div class="flex items-center gap-2 mb-3">
-                    <span class="h-2 w-2 rounded-full bg-sky-500 animate-pulse"></span>
-                    <span class="text-sky-500 font-bold uppercase tracking-[0.2em] text-[10px]">Phased Acquisition Strategy</span>
-                </div>
-                <h1 class="text-7xl font-extrabold text-white tracking-tighter">The Herwald Portfolio</h1>
-                <p class="text-slate-500 text-2xl mt-2">Phased Buyout Logic & Multi-Year Note Income</p>
-            </div>
-            <div class="glass p-8 rounded-[2rem] text-right shadow-2xl border-sky-900/30">
-                <div class="text-[13px] uppercase text-slate-500 font-black tracking-widest mb-1">Portfolio Debt Cleared</div>
-                <div class="text-5xl font-black text-red-500 font-mono" x-text="formatCurrency(656498.25)"></div>
-            </div>
-        </header>
+<body>
+
+<!-- Nav dots -->
+<nav class="nav-dots" id="navDots">
+  <div class="nav-dot active" onclick="scrollTo(0)"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-overview').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-prices').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-costs').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-how').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-income').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-protection').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-total').scrollIntoView({behavior:'smooth'})"></div>
+  <div class="nav-dot" onclick="document.getElementById('s-faq').scrollIntoView({behavior:'smooth'})"></div>
+</nav>
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section class="hero" id="s-hero">
+  <div class="hero-eyebrow fade-up fade-up-1">A personal proposal</div>
+  <h1 class="hero-title serif fade-up fade-up-2">
+    A fresh start<br><em>for your portfolio.</em>
+  </h1>
+  <p class="hero-sub fade-up fade-up-3">
+    Angela, this page was made just for you. No confusing finance terms. 
+    Just a simple, honest explanation of how selling your 8 properties 
+    could work — on your timeline, at your price, with money coming in 
+    every single month.
+  </p>
+  <div class="fade-up fade-up-4" style="background:rgba(160,120,64,0.08);border:1px solid rgba(160,120,64,0.2);border-radius:10px;padding:14px 22px;font-size:13px;color:var(--ink3);max-width:480px;line-height:1.7;margin-bottom:8px;">
+    &#x1F4DD; <strong style="color:var(--ink2);">A note on the numbers:</strong> The prices used throughout this page are estimates for illustration. We&#39;ll sit down together and you tell me what you want for each home — then we plug your numbers in and everything updates. Scroll to <em>&#8220;Your Prices&#8221;</em> near the bottom to try it now.
+  </div>
+  <div class="hero-scroll fade-up fade-up-5">scroll</div>
+</section>
 
 
+<!-- ══════════════════════════════════
+     OVERVIEW
+══════════════════════════════════ -->
+<section id="s-overview">
+  <div class="container">
+    <div class="section-label fade-up">The big picture</div>
+    <h2 class="section-title fade-up">Here's the short version.</h2>
+    <p class="lead fade-up">
+      You sell all 8 properties over 4 years — 2 per year. 
+      You get a large chunk of cash every time a pair closes. 
+      You get steady monthly payments on the properties you're 
+      "holding the loan" on. And after 5 years, you get paid out 
+      completely and walk away free and clear.
+    </p>
+    <p class="body-text fade-up">
+      Think of it like this: instead of waiting for one big buyer to 
+      appear with a suitcase of cash for all 8 at once (which rarely happens), 
+      you sell in pairs, get paid multiple times, and collect income the 
+      whole way through.
+    </p>
 
-        <section class="grid lg:grid-cols-2 gap-12 mb-20 items-center">
-            <div class="space-y-8">
-                <div>
-                    <h3 class="text-5xl font-bold text-white mb-4">Strategic Advantages for You</h3>
-                    <p class="text-slate-400 text-base leading-relaxed">
-                        This phased acquisition is engineered to maximize your total return while minimizing the friction of the transition. We focus on three core pillars:
-                    </p>
-                </div>
-                
-                <div class="space-y-4">
-                    <div class="glass p-6 rounded-xl border-white/5 flex gap-4 items-start">
-                        <div class="p-2 rounded-lg bg-red-500/10 text-red-500 text-lg font-bold">01</div>
-                        <div>
-                            <div class="text-lg font-bold text-white uppercase tracking-wider">Full Debt Clearance</div>
-                            <p class="text-[15px] text-slate-400 italic mt-2 leading-relaxed">I will immediately pay off the existing <span class="text-red-400 font-bold">$656,498.25</span> portfolio debt, freeing your credit and balance sheet across all phases.</p>
-                            <p class="text-[14px] text-slate-400 mt-3 leading-relaxed"><span class="text-sky-400 font-semibold">How it works:</span> My bank loan will provide the capital to acquire all properties at fair market value. At closing, proceeds from this acquisition financing are used to simultaneously pay off your existing portfolio debt in full—meaning your lenders are satisfied in real-time, and you walk away with a clean balance sheet. This is a standard and efficient structure that banks are accustomed to handling.</p>
-                        </div>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border-white/5 flex gap-4 items-start">
-                        <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-500 text-lg font-bold">02</div>
-                        <div>
-                            <div class="text-lg font-bold text-white uppercase tracking-wider">Cash Flow Continuity</div>
-                            <p class="text-[15px] text-slate-400 italic mt-2 leading-relaxed">Your current active management income converts directly into effortless passive note income. Guaranteed payments with zero vacancy or repair liability.</p>
-                        </div>
-                    </div>
-
-                    <div class="glass p-6 rounded-xl border-white/5 flex gap-4 items-start">
-                        <div class="p-2 rounded-lg bg-sky-500/10 text-sky-500 text-lg font-bold">03</div>
-                        <div>
-                            <div class="text-lg font-bold text-white uppercase tracking-wider">Rent Growth Window</div>
-                            <p class="text-[15px] text-slate-400 italic mt-2 leading-relaxed">The 24-month 0% interest period for each phase gives Buyer breathing room to increase rents, stabilize operations, and strategically improve each property without interest drag.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="glass p-10 rounded-[3rem] shadow-2xl space-y-8 bg-gradient-to-br from-emerald-500/5 to-transparent border-emerald-500/10">
-                <div>
-                    <div class="flex justify-between items-end mb-2 text-emerald-400">
-                        <div class="text-[13px] font-black uppercase tracking-[0.2em]">Target Passive Yield</div>
-                        <div class="text-sm font-bold">Monthly Recurring</div>
-                    </div>
-                    <div class="text-8xl font-black text-white font-mono tracking-tighter" x-text="formatCurrency(totalPassiveIncome)"></div>
-                </div>
-                
-                <div class="space-y-6 pt-6 border-t border-white/5">
-                    <div class="flex justify-between items-center text-[12px] uppercase font-bold">
-                        <span class="text-slate-500 tracking-widest">Annual Guaranteed Income</span>
-                        <span class="text-3xl text-emerald-400 font-mono" x-text="formatCurrency(totalPassiveIncome * 12)"></span>
-                    </div>
-                    <div class="h-1 bg-white/5 rounded-full overflow-hidden">
-                        <div class="h-full bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]" style="width: 100%"></div>
-                    </div>
-                    <p class="text-[12px] text-slate-400 leading-relaxed font-medium bg-white/[0.02] p-4 rounded-xl border border-white/5 italic">
-                        "Your monthly check becomes a fully guaranteed priority payment, backed by the equity of this entire 8-property portfolio."
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5-Year Staggered Schedule -->
-        <section class="mb-12 glass p-10 rounded-[3rem] border-emerald-500/20 shadow-2xl relative overflow-hidden">
-            <div class="mb-8">
-                <h3 class="text-5xl font-bold text-white mb-4">Staggered Stabilization Schedule</h3>
-                <p class="text-slate-400 text-base max-w-4xl leading-relaxed">
-                    This staggered approach is designed specifically for your benefit. By implementing a 
-                    <span class="text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/10">24-month 0% interest period</span> 
-                    for each acquisition phase, you gain a critical window to increase rents, stabilize operations, and strategically improve each property before full interest accrual begins.
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <template x-for="year in [1, 2, 3, 4, 5]">
-                    <div class="glass p-6 rounded-2xl border-white/5 bg-white/[0.02] flex flex-col justify-between transition-transform hover:scale-[1.02]">
-                        <div>
-                            <div class="text-[12px] font-black text-slate-500 uppercase mb-2" x-text="'Year ' + year"></div>
-                            <div class="text-3xl font-black text-white font-mono" x-text="formatCurrency(calculateYearlyIncome(year))"></div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-white/5 text-[10px] text-slate-400 uppercase font-black leading-tight tracking-tighter" x-text="getYearLabel(year)"></div>
-                    </div>
-                </template>
-            </div>
-        </section>
-
-        <!-- Interactive Property Ledger -->
-        <section class="glass rounded-[2.5rem] overflow-hidden shadow-2xl mb-12 border-white/5">
-            <div class="p-8 border-b border-white/5 bg-white/[0.01] flex justify-between items-center">
-                <h3 class="text-4xl font-bold">Dynamic Property Ledger</h3>
-                <span class="text-[12px] font-black text-slate-500 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Fully Interactive Session</span>
-            </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm border-collapse">
-                    <thead>
-                        <tr class="text-slate-500 bg-black/40 border-b border-white/5 uppercase text-[10px] font-black tracking-widest whitespace-nowrap">
-                            <th class="p-4">Property Identity</th>
-                            <th class="p-4">Purchase P.</th>
-                            <th class="p-4 bg-slate-500/5 text-slate-400">Angela PITI</th>
-                            <th class="p-4 text-emerald-400">Angela Rents</th>
-                            <th class="p-4 text-emerald-500">Angela Profit</th>
-                            <th class="p-4 text-amber-400">Seller Note Income</th>
-                            <th class="p-4 border-l border-white/10 text-sky-400">Rate %</th>
-                            <th class="p-4 text-sky-400">Term</th>
-                            <th class="p-4 text-sky-400">Downpayment %</th>
-                            <th class="p-4 text-sky-400 font-bold">New PITI</th>
-                            <th class="p-4 text-sky-500">Stabilized Rents</th>
-                            <th class="p-4 border-l border-white/10 text-emerald-400">Current CF</th>
-                            <th class="p-4 text-emerald-500 font-bold">Market CF</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-white/5">
-                        <template x-for="(prop, index) in properties" :key="index">
-                            <tr class="hover:bg-white/[0.02] transition-colors border-b border-white/5 text-[13px]">
-                                <td class="p-4 min-w-[180px]">
-                                    <div class="font-bold text-white mb-0.5" x-text="prop.address"></div>
-                                    <div :class="prop.isAnchor ? 'text-red-400/80' : 'text-sky-400/80'" class="text-[9px] font-black uppercase tracking-tighter" x-text="prop.isAnchor ? 'Bank Loan @ ' + (prop.rate || globalBankRate) + '%' : 'Seller Note @ ' + (prop.rate || globalNoteRate) + '%'"></div>
-                                </td>
-                                <td class="p-4"><input type="number" x-model.number="prop.price" step="5000"></td>
-                                <td class="p-4 font-mono text-slate-500 bg-slate-500/[0.02]" x-text="formatCurrency(prop.currentPITI)"></td>
-                                <td class="p-4 font-mono text-emerald-400"><input type="number" x-model.number="prop.currentRent" step="50"></td>
-                                <td class="p-4 font-mono text-emerald-400 font-bold" x-text="formatCurrency(calculateAngelaProfit(prop))"></td>
-                                <td class="p-4 font-mono text-amber-400 font-bold" x-text="formatCurrency(calculateSellerNoteIncome(prop))"></td>
-                                <td class="p-4 border-l border-white/10"><input type="number" x-model.number="prop.rate" :placeholder="prop.isAnchor ? globalBankRate : globalNoteRate" step="0.125"></td>
-                                <td class="p-4 min-w-[85px]"><input type="number" x-model.number="prop.term" step="12"></td>
-                                <td class="p-4 min-w-[85px]"><input type="number" x-model.number="prop.down" step="1" min="0" max="100"></td>
-                                <td class="p-4 font-mono font-black text-sky-400" x-text="formatCurrency(calculateNewPITI(prop))"></td>
-                                <td class="p-4"><input type="number" x-model.number="prop.marketRent" step="50"></td>
-                                <td class="p-4 font-mono border-l border-white/10" :class="calculateCurrentCF(prop) > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(calculateCurrentCF(prop))"></td>
-                                <td class="p-4 font-mono font-bold" :class="calculateMarketCF(prop) > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(calculateMarketCF(prop))"></td>
-                            </tr>
-                        </template>
-                    </tbody>
-                    <<tfoot>
-                        <tr class="bg-white/[0.03] text-white font-bold text-[13px] border-t-2 border-white/10 whitespace-nowrap">
-                            <td class="p-4 uppercase tracking-tighter text-[11px] font-black">Portfolio Totals</td>
-                            <td class="p-4 font-mono" x-text="formatCurrency(totalValue)"></td>
-                            <td class="p-4 font-mono bg-slate-500/[0.05] text-slate-400" x-text="formatCurrency(totalCurrentPITI)"></td>
-                            <td class="p-4 font-mono text-emerald-400" x-text="formatCurrency(totalCurrentRent)"></td>
-                            <td class="p-4 font-mono text-emerald-400 font-bold" x-text="formatCurrency(totalAngelaProfit)"></td>
-                            <td class="p-4 font-mono text-amber-400 font-bold" x-text="formatCurrency(totalSellerNoteIncome)"></td>
-                            <td colspan="3" class="p-4 border-l border-white/10"></td>
-                            <td class="p-4 font-mono text-sky-400 font-black" x-text="formatCurrency(totalNewPITIValue)"></td>
-                            <td class="p-4 font-mono text-sky-500 font-black" x-text="formatCurrency(totalMarketRent)"></td>
-                            <td class="p-4 font-mono border-l border-white/10" :class="totalFutureCurrentCF > 0 ? 'text-emerald-400' : 'text-red-400'" x-text="formatCurrency(totalFutureCurrentCF)"></td>
-                            <td class="p-4 font-mono font-black text-emerald-500" x-text="formatCurrency(totalFutureMarketCF)"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </section>
+    <div class="analogy-box fade-up">
+      <p class="analogy-text">
+        It's like selling your car, but instead of waiting for someone 
+        to hand you the full price today, they give you a solid deposit 
+        right now and pay you the rest comfortably over time — 
+        while you know the money is 100% coming.
+      </p>
+      <p class="analogy-caption">That's essentially what this deal is.</p>
     </div>
 
-    <script>
-        function portfolioApp() {
-            return {
-                globalNoteRate: 2.0,
-                globalBankRate: 7.0,
-                properties: [
-                    { address: '116/118 Shadybrook', phase: 1, currentPITI: 1739.22, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: true, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 20 },
-                    { address: '141/143 Shadybrook', phase: 1, currentPITI: 1723.22, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
-                    { address: '144/146 Shadybrook', phase: 1, currentPITI: 1749.27, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
-                    { address: '125/127 Larchbrook', phase: 1, currentPITI: 1817.59, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
-                    { address: '120/122 Idlecreek', phase: 2, currentPITI: 2202.48, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
-                    { address: '800/802 Summit', phase: 2, currentPITI: 2005.17, currentRent: 2600, marketRent: 3600, price: 410000, isAnchor: true, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 20 },
-                    { address: '804/806 Summit', phase: 2, currentPITI: 1936.05, currentRent: 2800, marketRent: 3600, price: 410000, isAnchor: false, tax: 835.10, insurance: 208.33, rate: null, term: 360, down: 0 },
-                    { address: '1419/1421 Deborah', phase: 3, currentPITI: 1269.69, currentRent: 1800, marketRent: 2500, price: 310000, isAnchor: false, tax: 631.42, insurance: 166.67, rate: null, term: 360, down: 0 }
-                ],
-                calculateAmortization(amount, rate, term) {
-                    const r = (rate / 100) / 12;
-                    const n = term || 360;
-                    if (r === 0) return amount / n;
-                    return (amount * r) / (1 - Math.pow(1 + r, -n));
-                },
-                getRate(p) {
-                    return p.rate !== null && p.rate !== "" ? p.rate : (p.isAnchor ? this.globalBankRate : this.globalNoteRate);
-                },
-                calculateNewPI(p) {
-                    const rate = this.getRate(p);
-                    const amount = p.price * (1 - (p.down || 0) / 100);
-                    return this.calculateAmortization(amount, rate, p.term);
-                },
-                calculateNewPITI(p) {
-                    return this.calculateNewPI(p) + p.tax + p.insurance;
-                },
-                calculateCurrentCF(p) { return p.currentRent - this.calculateNewPITI(p); },
-                calculateMarketCF(p) { return p.marketRent - this.calculateNewPITI(p); },
-                calculateAngelaProfit(p) { return p.currentRent - p.currentPITI; },
-                calculateSellerNoteIncome(p) { 
-                    if (p.isAnchor) return 0;
-                    const amount = p.price * (1 - (p.down || 0) / 100);
-                    const rate = p.rate !== null && p.rate !== "" ? p.rate : this.globalNoteRate;
-                    return this.calculateAmortization(amount, rate, p.term);
-                },
-                
-                get totalValue() { return this.properties.reduce((s, p) => s + p.price, 0); },
-                get totalCurrentRent() { return this.properties.reduce((s, p) => s + p.currentRent, 0); },
-                get totalMarketRent() { return this.properties.reduce((s, p) => s + p.marketRent, 0); },
-                get totalCurrentPITI() { return this.properties.reduce((s, p) => s + p.currentPITI, 0); },
-                get totalNewPI() { return this.properties.reduce((s, p) => s + this.calculateNewPI(p), 0); },
-                get totalTaxIns() { return this.properties.reduce((s, p) => s + p.tax + p.insurance, 0); },
-                get totalNewPITIValue() { return this.properties.reduce((s, p) => s + this.calculateNewPITI(p), 0); },
-                get totalFutureCurrentCF() { return this.totalCurrentRent - this.totalNewPITIValue; },
-                get totalFutureMarketCF() { return this.totalMarketRent - this.totalNewPITIValue; },
-                get totalAngelaProfit() { return this.properties.reduce((s, p) => s + this.calculateAngelaProfit(p), 0); },
-                get totalSellerNoteIncome() { return this.properties.reduce((s, p) => s + this.calculateSellerNoteIncome(p), 0); },
-                
-                get totalPassiveIncome() {
-                    return this.properties.reduce((s, p) => {
-                        if (p.isAnchor) return s;
-                        return s + this.calculateAmortization(p.price, this.getRate(p), p.term);
-                    }, 0);
-                },
-                getYearLabel(year) {
-                    if (year === 1) return `Phase 1 Closed (0%)`;
-                    if (year === 2) return `Phase 2 Closed (P1:0%, P2:0%)`;
-                    if (year === 3) return `Phase 3 Closed (P1:${this.globalNoteRate}%, P2:0%, P3:0%)`;
-                    if (year === 4) return `P1:${this.globalNoteRate}%, P2:${this.globalNoteRate}%, P3:0%`;
-                    if (year === 5) return `Full Portfolio @ ${this.globalNoteRate}%`;
-                    return "";
-                },
-                calculateYearlyIncome(year) {
-                    return this.properties.reduce((total, p) => {
-                        if (p.isAnchor) return total;
-                        const yearsPossession = year - (p.phase - 1);
-                        if (yearsPossession <= 0) return total;
-                        const rate = yearsPossession <= 2 ? 0 : this.getRate(p);
-                        return total + this.calculateAmortization(p.price, rate, p.term);
-                    }, 0);
-                },
-                formatCurrency(v) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(v); }
-            }
+    <div class="divider"></div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px;margin-top:8px;">
+      <div class="fade-up fade-up-1">
+        <div class="big-number">4</div>
+        <div class="big-number-label">Years to sell<br>all 8 properties</div>
+      </div>
+      <div class="fade-up fade-up-2">
+        <div class="big-number">2</div>
+        <div class="big-number-label">Properties closed<br>each year</div>
+      </div>
+      <div class="fade-up fade-up-3">
+        <div class="big-number">$0</div>
+        <div class="big-number-label">Interest you charge<br>on your loans</div>
+      </div>
+      <div class="fade-up fade-up-4">
+        <div class="big-number">4</div>
+        <div class="big-number-label">Separate balloon<br>payoffs (yrs 6–9)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     YOUR PRICES
+══════════════════════════════════ -->
+<div class="price-editor" id="s-prices">
+  <div class="container">
+    <div class="section-label fade-up">Your numbers, your call</div>
+    <h2 class="section-title fade-up">What do <em>you</em> want<br>for each home?</h2>
+    <p class="lead fade-up">
+      The prices on this page are starting estimates — not final offers. 
+      Type in what you feel each property is worth to you and watch 
+      everything update instantly. We'll use these conversations as 
+      the starting point when we're ready to make it official.
+    </p>
+
+    <div class="price-grid fade-up" id="priceGrid"></div>
+
+    <div style="text-align:center;">
+      <button class="reset-btn" onclick="resetPrices()">↺ Reset to original estimates</button>
+    </div>
+
+    <div class="price-summary" id="priceSummary"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     COST OF TRADITIONAL SALE
+══════════════════════════════════ -->
+<section id="s-costs">
+  <div class="container">
+    <div class="section-label fade-up">The cost of doing it the other way</div>
+    <h2 class="section-title fade-up">What a traditional sale<br><em>really took from you.</em></h2>
+    <p class="lead fade-up">
+      You've already been through this — you know exactly what agents, make-ready, 
+      and holding costs feel like. Type in your actual numbers from past sales 
+      and see what you've already given up, and what you'd save on every remaining property 
+      by selling as-is directly.
+    </p>
+
+    <!-- ── Per-property input cards ── -->
+    <div id="costInputCards" style="margin-top:36px;"></div>
+
+    <div style="text-align:center;margin-top:8px;">
+      <button class="reset-btn" onclick="resetCostInputs()">↺ Reset to estimates</button>
+    </div>
+
+    <!-- Cost breakdown bars -->
+    <div style="margin:40px 0;" id="costBars"></div>
+
+    <!-- Per-property results table -->
+    <div style="overflow-x:auto;" class="fade-up">
+      <table class="income-table" id="costTable"></table>
+    </div>
+
+    <!-- The punchline -->
+    <div id="costPunchline" style="margin-top:36px;"></div>
+
+    <!-- Time cost -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px;" class="fade-up">
+      <div style="background:#fff;border:1px solid var(--cream3);border-radius:14px;padding:24px 28px;text-align:center;box-shadow:0 2px 16px var(--warm-shadow);">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--red);line-height:1;">8</div>
+        <div style="font-size:13px;color:var(--ink3);margin-top:6px;line-height:1.6;">Years to fully exit<br>the traditional way<br><span style="font-size:11px;color:var(--ink3);opacity:.7;">(one sale per year, your current pace)</span></div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--cream3);border-radius:14px;padding:24px 28px;text-align:center;box-shadow:0 2px 16px var(--warm-shadow);">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:56px;font-weight:300;color:var(--green);line-height:1;">4</div>
+        <div style="font-size:13px;color:var(--ink3);margin-top:6px;line-height:1.6;">Years to fully exit<br>with this deal<br><span style="font-size:11px;color:var(--ink3);opacity:.7;">(all 8 transferred, then just collecting)</span></div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13px;text-align:center;color:var(--ink3);">
+      That's 4 fewer years of phone calls, repairs, tenant issues, and property management decisions.
+    </p>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     HOW IT WORKS — TIMELINE
+══════════════════════════════════ -->
+<section id="s-how">
+  <div class="container-wide">
+    <div class="container" style="padding:0;">
+      <div class="section-label fade-up">How it works, step by step</div>
+      <h2 class="section-title fade-up">Each year, two houses.<br><em>A simple rhythm.</em></h2>
+      <p class="lead fade-up">
+        Each year you close on one pair of properties. For each pair, 
+        one house is bought traditionally (bank pays you), and the other 
+        you finance yourself — like a private lender — earning monthly payments.
+      </p>
+    </div>
+
+    <div class="timeline" style="margin-top:56px;" id="timeline"></div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     YOUR INCOME
+══════════════════════════════════ -->
+<section id="s-income">
+  <div class="container">
+    <div class="section-label fade-up">Your money</div>
+    <h2 class="section-title fade-up">What you actually<br><em>walk away with.</em></h2>
+    <p class="lead fade-up">
+      Every time a pair closes, you receive cash at the table. 
+      Plus, for each property you hold the loan on, you get a 
+      check in the mail every single month — like clockwork — 
+      until year 5 when everything is paid off completely.
+    </p>
+
+    <div class="analogy-box fade-up">
+      <p class="analogy-text">
+        The monthly payments are like a CD at the bank — except 
+        instead of 0.5% interest, your "bank" is paying you back 
+        the full purchase price with zero fees. Pure principal, 
+        straight to you.
+      </p>
+    </div>
+
+    <table class="income-table fade-up" id="incomeTable"></table>
+
+    <p class="body-text fade-up" style="margin-top:24px;">
+      * Monthly note payments are calculated on a 20-year schedule at 0% interest — 
+      meaning every dollar goes straight to you, none to a bank.
+      At the end of year 5, the buyer refinances and pays off any remaining balance in full.
+    </p>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     TOTAL STRIP
+══════════════════════════════════ -->
+<div class="total-strip" id="s-total">
+  <div class="total-strip-label">Your grand total</div>
+  <div class="total-strip-number" id="grandTotal">—</div>
+  <div class="total-strip-sub">Total you receive across all 8 properties, all 5 years</div>
+  <div class="total-grid" id="totalGrid"></div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     PROTECTIONS
+══════════════════════════════════ -->
+<section id="s-protection">
+  <div class="container">
+    <div class="section-label fade-up">Your protections</div>
+    <h2 class="section-title fade-up">You are protected<br><em>at every step.</em></h2>
+    <p class="lead fade-up">
+      This isn't a handshake deal. Every protection you'd have with 
+      a traditional sale is in place — plus some extra ones that 
+      actually favor you.
+    </p>
+
+    <ul class="protection-list fade-up">
+      <li>
+        <div class="protection-icon">🏠</div>
+        <div>
+          <strong>You hold the deed until you're paid.</strong><br>
+          On the properties where you're financing the buyer, you remain 
+          on title as the lienholder. If they ever miss a payment, 
+          the property comes back to you — just like a bank repossessing a car.
+        </div>
+      </li>
+      <li>
+        <div class="protection-icon">📋</div>
+        <div>
+          <strong>A signed contract locks in every price today.</strong><br>
+          We sign a Master Purchase Agreement covering all 8 properties right now, 
+          at agreed prices, with a closing schedule. You don't have to wonder 
+          if the deal is real — it's legally binding before we close on a single one.
+        </div>
+      </li>
+      <li>
+        <div class="protection-icon gold">💰</div>
+        <div>
+          <strong>Cash at every closing — no waiting.</strong><br>
+          Every time a pair closes (once a year), you receive a lump-sum 
+          cash payment at the table. This is real money in your account, 
+          not a promise.
+        </div>
+      </li>
+      <li>
+        <div class="protection-icon">🔒</div>
+        <div>
+          <strong>The balloon is secured, not a hope.</strong><br>
+          At year 5, the buyer refinances through a bank. Banks do this 
+          every day — it's a routine transaction. The contract requires it, 
+          and if it doesn't happen, they're in default and you keep everything 
+          they've paid plus the property.
+        </div>
+      </li>
+      <li>
+        <div class="protection-icon gold">📅</div>
+        <div>
+          <strong>You're done in 4 years — selling, anyway.</strong><br>
+          All 8 properties are fully transferred within 4 years. 
+          You are no longer a landlord after year 4. No more calls 
+          about broken heaters. No more property management headaches. 
+          Just monthly payments arriving in your account.
+        </div>
+      </li>
+      <li>
+        <div class="protection-icon">⚖️</div>
+        <div>
+          <strong>Standard promissory note — real legal document.</strong><br>
+          Your seller financing is documented with a standard promissory note 
+          and deed of trust, recorded at the county. It is exactly as 
+          enforceable as a bank mortgage.
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     FAQ
+══════════════════════════════════ -->
+<section id="s-faq">
+  <div class="container">
+    <div class="section-label fade-up">Questions you might have</div>
+    <h2 class="section-title fade-up">Let's be completely<br><em>honest.</em></h2>
+
+    <div class="faq-item fade-up">
+      <div class="faq-q">Why would I agree to 0% interest on my loan?</div>
+      <div class="faq-a">
+        <p style="margin-bottom:12px;">Because 0% interest is the fair trade for something very real you're receiving: <strong>a buyer who is going to pour money into these properties.</strong></p>
+        <p style="margin-bottom:12px;">
+          Renovations, repairs, updated kitchens and bathrooms, new appliances, fresh paint, landscaping — 
+          all of that costs real money, and it all goes directly into properties that are still 
+          <em>your collateral</em> until the balloon is paid. Every dollar spent improving these homes 
+          increases their value, which means your security as the lender gets stronger over time, 
+          not weaker.
+        </p>
+        <p style="margin-bottom:12px;">
+          Think about it this way: a bank charges interest because it's lending money it could deploy 
+          elsewhere. You're not a bank — you're a seller who was already planning to offload 
+          one property a year anyway. This deal gets all 8 sold in 4 years instead of 8, 
+          gets you paid for 9 years straight, and the whole time your collateral is being actively 
+          improved by someone with skin in the game.
+        </p>
+        <p style="margin-bottom:0;">
+          The 0% isn't a gift. It's your price for delivering a buyer who invests in the properties 
+          rather than just collecting rent and letting them deteriorate. By the time the balloon 
+          comes due, these homes will be worth more than when you sold them — and that's what 
+          guarantees you get paid.
+        </p>
+      </div>
+    </div>
+
+    <div class="faq-item fade-up">
+      <div class="faq-q">When exactly does each balloon happen?</div>
+      <div class="faq-a">
+        The 5-year clock starts from the date <em>each pair closes</em> — not from a single fixed date.
+        So the pair you sell in Year 1 balloons in Year 6. Year 2 balloons in Year 7. 
+        Year 3 in Year 8. Year 4 in Year 9. You'll receive four separate balloon payoffs, 
+        one per year from Year 6 through Year 9 — which is actually great, because it spreads 
+        out the large paydays and the tax impact across multiple years.
+      </div>
+    </div>
+
+    <div class="faq-item fade-up">
+      <div class="faq-q">What if the buyer can't refinance when the balloon comes due?</div>
+      <div class="faq-a">
+        Then the balloon is in default and you have full legal recourse — 
+        which means you can foreclose and take the property back, keeping 
+        everything paid to date, or negotiate an extension with better 
+        terms. In practice, a buyer who has been making payments for 5 years, 
+        raised the rents, and built equity has every incentive and 
+        ability to refinance. Banks love this deal profile.
+      </div>
+    </div>
+
+    <div class="faq-item fade-up">
+      <div class="faq-q">What if I need more money in a given year?</div>
+      <div class="faq-a">
+        That's a conversation we can have. The closing cash amounts are 
+        negotiable. If you need a larger payout in year 1, we can 
+        structure that. The framework is flexible — what matters is 
+        that your total income across all years meets your needs, 
+        and we can move money around within the deal to make that work.
+      </div>
+    </div>
+
+    <div class="faq-item fade-up">
+      <div class="faq-q">Why not just list all 8 on the MLS and sell normally?</div>
+      <div class="faq-a">
+        You absolutely can — and that might be the right choice. 
+        But consider: selling 8 investment properties traditionally 
+        means 8 separate closings, 8 sets of agents and fees, 
+        capital gains tax on all equity at once, and no guarantee 
+        of timeline or price. This deal gives you one trusted buyer, 
+        known prices, no agents, and the ability to spread the tax 
+        impact across multiple years. It's not for everyone — 
+        but for someone who wants certainty and simplicity, 
+        it's hard to beat.
+      </div>
+    </div>
+
+    <div class="faq-item fade-up">
+      <div class="faq-q">What happens to my existing mortgages?</div>
+      <div class="faq-a">
+        On House 1 of each pair (the bank-financed one), the buyer's 
+        new bank loan pays off your existing mortgage at closing — 
+        you receive the difference as cash. On House 2 (your seller-financed one), 
+        you use the cash you received from House 1's closing to pay 
+        off that property's existing mortgage yourself, leaving it 
+        free and clear. Then you hold it as the lender. 
+        Both mortgages are gone after each pair closes.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════
+     CLOSING
+══════════════════════════════════ -->
+<div class="closing" id="s-closing">
+  <h2 class="closing-title fade-up">
+    You've built something real.<br>This is how you get paid for it.
+  </h2>
+  <p class="closing-body fade-up">
+    This proposal is a starting point — not a take-it-or-leave-it offer. 
+    Every number here is negotiable. What matters is finding terms 
+    that let you move forward with confidence, knowing your properties 
+    are in good hands and your financial future is secure.
+  </p>
+  <div class="closing-sig fade-up">Thank you for considering this, Angela.</div>
+</div>
+
+
+<script>
+// ── Data ──
+const PAIRS = [
+  {
+    year: 1, balloonYear: 6,
+    bank:   { addr: '116/118 Shadybrook', price: 410000, bal: 73937.15,   rent: 2600 },
+    seller: { addr: '141/143 Shadybrook', price: 410000, bal: 69246.44,   rent: 2600 },
+  },
+  {
+    year: 2, balloonYear: 7,
+    bank:   { addr: '144/146 Shadybrook', price: 410000, bal: 76637.59,   rent: 2600 },
+    seller: { addr: '125/127 Larchbrook', price: 410000, bal: 72245.79,   rent: 2600 },
+  },
+  {
+    year: 3, balloonYear: 8,
+    bank:   { addr: '120/122 Idlecreek',  price: 410000, bal: 81947.65,   rent: 2600 },
+    seller: { addr: '800/802 Summit',     price: 410000, bal: 130972.34,  rent: 2600 },
+  },
+  {
+    year: 4, balloonYear: 9,
+    bank:   { addr: '804/806 Summit',     price: 410000, bal: 99764.90,   rent: 2800 },
+    seller: { addr: '1419/1421 Deborah',  price: 310000, bal: 51746.39,   rent: 1800 },
+  },
+];
+
+const AMORT_YRS = 20;
+const AMORT_MOS = AMORT_YRS * 12;
+
+function fmt(n) {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+}
+
+// Note balance remaining after N months of 0% amort payments
+function noteBal(noteAmt, monthsPaid) {
+  const pmt = noteAmt / AMORT_MOS;
+  return Math.max(0, noteAmt - pmt * monthsPaid);
+}
+
+// ── Build timeline ──
+function buildTimeline() {
+  const el = document.getElementById('timeline');
+  let html = '';
+
+  // Acquisition years 1–4
+  PAIRS.forEach(pair => {
+    const bankLoan    = pair.bank.price * 0.80;
+    const bankDown    = pair.bank.price * 0.20;
+    const h1Equity    = bankLoan - pair.bank.bal;
+    const h1Cash      = h1Equity + bankDown;
+    const h2NoteAmt   = pair.seller.price;
+    const h2NotePmt   = h2NoteAmt / AMORT_MOS;
+    const h2Bal60     = noteBal(h2NoteAmt, 60); // balance after 5 years
+    const angelaCash  = h1Cash - pair.seller.bal;
+
+    html += `
+    <div class="timeline-item fade-up">
+      <div class="timeline-year">
+        <div class="year-bubble">${pair.year}</div>
+        <div class="year-label">Year ${pair.year}</div>
+      </div>
+      <div class="timeline-content">
+        <span class="timeline-tag tag-bank">Bank Purchase</span>
+        <span class="timeline-tag tag-seller">Seller Finance</span>
+        <h3 class="timeline-title">Two houses close. You get paid twice.</h3>
+        <p class="timeline-body">
+          <strong>${pair.bank.addr}</strong> sells the normal way — a bank gives the buyer a loan,
+          that loan pays off your existing mortgage (${fmt(pair.bank.bal)}),
+          and you pocket the equity difference in cash right at the table.
+          <br><br>
+          <strong>${pair.seller.addr}</strong> is different. You pay off its mortgage
+          (${fmt(pair.seller.bal)}) using the cash from the first closing, then you
+          become the bank — lending the buyer the full purchase price at 0% interest,
+          paid back over 20 years. Every month they send you a check.
+          Five years after this closing (<strong>Year ${pair.balloonYear}</strong>),
+          they refinance and pay off the remaining balance in one lump sum.
+        </p>
+        <div class="money-row">
+          <div class="money-pill">
+            <div class="money-pill-amount">${fmt(angelaCash)}</div>
+            <div class="money-pill-label">Cash at closing</div>
+          </div>
+          <div class="money-pill">
+            <div class="money-pill-amount">${fmt(h2NotePmt)}/mo</div>
+            <div class="money-pill-label">Monthly note payment</div>
+          </div>
+          <div class="money-pill">
+            <div class="money-pill-amount">${fmt(h2NotePmt * 12)}</div>
+            <div class="money-pill-label">Note income / yr</div>
+          </div>
+          <div class="money-pill">
+            <div class="money-pill-amount">${fmt(h2Bal60)}</div>
+            <div class="money-pill-label">Balloon in Year ${pair.balloonYear}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // Years 5–9: note income continues, balloons arrive one per year
+  // Year 5: no new closes, just 4 active notes paying
+  // Years 6–9: one balloon per year
+
+  const allNotesMo = PAIRS.reduce((s,p) => s + p.seller.price / AMORT_MOS, 0);
+
+  // Year 5 — all notes active, no balloon yet
+  html += `
+  <div class="timeline-item fade-up">
+    <div class="timeline-year">
+      <div class="year-bubble" style="background:var(--ink2);">5</div>
+      <div class="year-label">Year 5</div>
+    </div>
+    <div class="timeline-content">
+      <span class="timeline-tag tag-income">Note Income</span>
+      <h3 class="timeline-title">All 4 notes active. Steady income, nothing to do.</h3>
+      <p class="timeline-body">
+        No new closings this year. All 4 seller-financed properties are generating monthly payments.
+        The first balloon is just one year away — the Year 1 pair refinances next year.
+      </p>
+      <div class="money-row">
+        <div class="money-pill">
+          <div class="money-pill-amount">${fmt(allNotesMo)}/mo</div>
+          <div class="money-pill-label">Total monthly note income (all 4)</div>
+        </div>
+        <div class="money-pill">
+          <div class="money-pill-amount">${fmt(allNotesMo * 12)}</div>
+          <div class="money-pill-label">Note income this year</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  // Years 6–9: one balloon per year
+  PAIRS.forEach(pair => {
+    const yr = pair.balloonYear;
+    const monthsPaid = 60; // 5 years × 12
+    const balloon = noteBal(pair.seller.price, monthsPaid);
+    // Active notes this year = pairs whose balloon year > this year (still paying)
+    const stillActive = PAIRS.filter(p => p.balloonYear > yr);
+    const stillActiveMo = stillActive.reduce((s,p) => s + p.seller.price / AMORT_MOS, 0);
+
+    html += `
+    <div class="timeline-item fade-up">
+      <div class="timeline-year">
+        <div class="year-bubble" style="background:var(--green);box-shadow:0 4px 20px rgba(58,125,92,0.25);">${yr}</div>
+        <div class="year-label" style="color:var(--green);">Year ${yr}</div>
+      </div>
+      <div class="timeline-content" style="border-color:rgba(58,125,92,0.25);background:rgba(58,125,92,0.02);">
+        <span class="timeline-tag tag-refi">Balloon Payoff</span>
+        <h3 class="timeline-title" style="color:var(--green);">${pair.seller.addr} pays off. Lump sum arrives.</h3>
+        <p class="timeline-body">
+          It has been exactly 5 years since you sold <strong>${pair.seller.addr}</strong> in Year ${pair.year}.
+          The buyer goes to a bank, refinances, and wires you the remaining note balance in full.
+          This note is done — you have no further involvement with this property.
+          ${stillActive.length > 0
+            ? `The other ${stillActive.length} note${stillActive.length > 1 ? 's' : ''} (${stillActive.map(p=>p.seller.addr.split('/')[0]).join(', ')}) continue paying monthly.`
+            : 'This is your final balloon. All notes are now fully retired.'}
+        </p>
+        <div class="money-row">
+          <div class="money-pill" style="background:rgba(58,125,92,0.06);border-color:rgba(58,125,92,0.2);">
+            <div class="money-pill-amount" style="color:var(--green);">${fmt(balloon)}</div>
+            <div class="money-pill-label">Balloon — ${pair.seller.addr}</div>
+          </div>
+          ${stillActiveMo > 0 ? `
+          <div class="money-pill">
+            <div class="money-pill-amount">${fmt(stillActiveMo)}/mo</div>
+            <div class="money-pill-label">Remaining note income after this</div>
+          </div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+// ── Build income table ──
+function buildIncomeTable() {
+  const el = document.getElementById('incomeTable');
+
+  let rows = `
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Cash at Closing</th>
+      <th>Monthly Note Income</th>
+      <th>Balloon Received</th>
+      <th>Year Total</th>
+    </tr>
+  </thead>
+  <tbody>`;
+
+  let grandTotal = 0;
+  let totalClosingCash = 0;
+  let totalNoteIncome = 0;
+  let totalBalloons = 0;
+
+  // Years 1–9
+  for (let yr = 1; yr <= 9; yr++) {
+    // Closing cash — only in years 1–4
+    const pair = PAIRS.find(p => p.year === yr);
+    let closingCash = 0;
+    let closingLabel = '—';
+    if (pair) {
+      const bankLoan = pair.bank.price * 0.80;
+      const bankDown = pair.bank.price * 0.20;
+      closingCash = (bankLoan - pair.bank.bal) + bankDown - pair.seller.bal;
+      closingLabel = `${fmt(closingCash)}<div class="income-sub">${pair.bank.addr} + ${pair.seller.addr}</div>`;
+      totalClosingCash += closingCash;
+    }
+
+    // Active notes this year = pairs acquired so far whose balloon year > yr (still paying)
+    // A note is active from its acquisition year until its balloon year (inclusive of balloon yr payment)
+    const activeNotes = PAIRS.filter(p => p.year <= yr && p.balloonYear >= yr);
+    const noteMo = activeNotes.reduce((s, p) => s + p.seller.price / AMORT_MOS, 0);
+    const noteYr = noteMo * 12;
+    totalNoteIncome += noteYr;
+
+    // Balloon this year
+    const balloonPair = PAIRS.find(p => p.balloonYear === yr);
+    let balloonAmt = 0;
+    let balloonLabel = '—';
+    if (balloonPair) {
+      balloonAmt = noteBal(balloonPair.seller.price, 60);
+      balloonLabel = `${fmt(balloonAmt)}<div class="income-sub" style="color:var(--green);">${balloonPair.seller.addr} paid off</div>`;
+      totalBalloons += balloonAmt;
+    }
+
+    const yearTotal = closingCash + noteYr + balloonAmt;
+    grandTotal += yearTotal;
+
+    const isBalloonYear = !!balloonPair;
+    const isCloseYear   = !!pair;
+    const rowStyle = isBalloonYear ? 'background:rgba(58,125,92,0.03);' : '';
+
+    rows += `<tr style="${rowStyle}">
+      <td>
+        <strong>Year ${yr}</strong>
+        ${isCloseYear  ? `<div class="income-sub" style="color:var(--blue);">↓ Close: ${pair.bank.addr.split('/')[0]}+ ${pair.seller.addr.split('/')[0]}</div>` : ''}
+        ${isBalloonYear? `<div class="income-sub" style="color:var(--green);">🎉 Balloon: ${balloonPair.seller.addr.split('/')[0]}</div>` : ''}
+      </td>
+      <td>${isCloseYear ? closingLabel : '<span style="color:var(--ink3)">—</span>'}</td>
+      <td>${fmt(noteMo)}/mo<div class="income-sub">${activeNotes.length} active note${activeNotes.length!==1?'s':''} · ${fmt(noteYr)}/yr</div></td>
+      <td>${isBalloonYear ? balloonLabel : '<span style="color:var(--ink3)">—</span>'}</td>
+      <td style="${isBalloonYear?'color:var(--green)!important;font-size:20px;':''}">${fmt(yearTotal)}</td>
+    </tr>`;
+  }
+
+  rows += `<tr>
+    <td><strong>Grand Total</strong><div class="income-sub">All years combined</div></td>
+    <td>${fmt(totalClosingCash)}<div class="income-sub">Closing cash, all 4 pairs</div></td>
+    <td>${fmt(totalNoteIncome)}<div class="income-sub">Note income, all years</div></td>
+    <td>${fmt(totalBalloons)}<div class="income-sub">All 4 balloons</div></td>
+    <td>${fmt(grandTotal)}</td>
+  </tr>`;
+
+  el.innerHTML = rows + '</tbody>';
+
+  // Update total strip
+  document.getElementById('grandTotal').textContent = fmt(grandTotal);
+
+  // Total grid
+  const peakNotesMo = PAIRS.reduce((s,p) => s + p.seller.price / AMORT_MOS, 0);
+  document.getElementById('totalGrid').innerHTML = `
+    <div class="total-cell">
+      <div class="total-cell-amount">${fmt(totalClosingCash)}</div>
+      <div class="total-cell-label">Cash at closings<br>(Years 1–4)</div>
+    </div>
+    <div class="total-cell">
+      <div class="total-cell-amount">${fmt(totalNoteIncome)}</div>
+      <div class="total-cell-label">Note income<br>(all years)</div>
+    </div>
+    <div class="total-cell">
+      <div class="total-cell-amount">${fmt(totalBalloons)}</div>
+      <div class="total-cell-label">Balloon payoffs<br>(Years 6–9)</div>
+    </div>
+    <div class="total-cell">
+      <div class="total-cell-amount">${fmt(peakNotesMo)}/mo</div>
+      <div class="total-cell-label">Peak monthly income<br>(Years 4–6)</div>
+    </div>
+  `;
+}
+
+// ── Scroll animation observer ──
+function initObserver() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.animationPlayState = 'running';
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    observer.observe(el);
+  });
+}
+
+// ── Nav dot updater ──
+function initNavDots() {
+  const sections = ['s-hero','s-overview','s-prices','s-costs','s-how','s-income','s-protection','s-total','s-faq'];
+  const dots = document.querySelectorAll('.nav-dot');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = sections.indexOf(e.target.id);
+        if (idx >= 0) {
+          dots.forEach(d => d.classList.remove('active'));
+          dots[idx] && dots[idx].classList.add('active');
         }
-    </script>
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+}
+
+// ── Default prices ──
+const DEFAULT_PRICES = {
+  'bank-0':   410000, 'seller-0': 410000,
+  'bank-1':   410000, 'seller-1': 410000,
+  'bank-2':   410000, 'seller-2': 410000,
+  'bank-3':   410000, 'seller-3': 310000,
+};
+const currentPrices = { ...DEFAULT_PRICES };
+
+function resetPrices() {
+  Object.keys(DEFAULT_PRICES).forEach(k => {
+    currentPrices[k] = DEFAULT_PRICES[k];
+    const inp = document.getElementById('inp-' + k);
+    if (inp) inp.value = DEFAULT_PRICES[k].toLocaleString();
+  });
+  syncPricesToPairs();
+  buildTimeline();
+  buildIncomeTable();
+  updatePriceSummary();
+}
+
+function syncPricesToPairs() {
+  PAIRS.forEach((pair, i) => {
+    pair.bank.price   = currentPrices['bank-' + i]   || pair.bank.price;
+    pair.seller.price = currentPrices['seller-' + i] || pair.seller.price;
+  });
+}
+
+function onPriceChange(key, raw) {
+  const val = parseInt(raw.replace(/[^0-9]/g, ''), 10);
+  if (!isNaN(val) && val >= 50000) {
+    currentPrices[key] = val;
+    syncPricesToPairs();
+    buildTimeline();
+    buildIncomeTable();
+    updatePriceSummary();
+    updateCardResult(key);
+  }
+}
+
+function fmtInput(val) {
+  return Math.round(val).toLocaleString('en-US');
+}
+
+function cardResult(role, pairIdx) {
+  const pair = PAIRS[pairIdx];
+  if (role === 'bank') {
+    const bankLoan = pair.bank.price * 0.80;
+    const bankDown = pair.bank.price * 0.20;
+    const cash = (bankLoan - pair.bank.bal) + bankDown - pair.seller.price * 0 ;
+    // Just show what bank deal means for this house
+    const equity = bankLoan - pair.bank.bal;
+    return `Bank loan covers ${fmt(bankLoan)} &middot; Your equity cash out: <strong>${fmt(equity + bankDown)}</strong>`;
+  } else {
+    const notePmt = pair.seller.price / AMORT_MOS;
+    const balloon = pair.seller.price - notePmt * 60;
+    return `Monthly payment to you: <strong>${fmt(notePmt)}/mo</strong> &middot; Balloon in Year ${pair.balloonYear}: <strong>${fmt(balloon)}</strong>`;
+  }
+}
+
+function updateCardResult(key) {
+  const el = document.getElementById('result-' + key);
+  if (!el) return;
+  const parts = key.split('-');
+  el.innerHTML = cardResult(parts[0], parseInt(parts[1]));
+}
+
+function buildPriceEditor() {
+  const grid = document.getElementById('priceGrid');
+  const roleLabel = { bank: 'Bank purchase', seller: 'Seller financed' };
+  let html = '';
+  PAIRS.forEach((pair, i) => {
+    ['bank','seller'].forEach(role => {
+      const prop  = pair[role];
+      const key   = role + '-' + i;
+      const defVal = DEFAULT_PRICES[key];
+      html += `
+      <div class="price-card">
+        <div class="price-card-pair">Year ${pair.year} · Pair ${i+1}</div>
+        <div class="price-card-addr">${prop.addr}</div>
+        <span class="price-card-role ${role === 'bank' ? 'role-bank' : 'role-seller'}">${roleLabel[role]}</span>
+        <div class="price-input-wrap">
+          <span class="price-input-prefix">$</span>
+          <input
+            class="price-input"
+            id="inp-${key}"
+            type="text"
+            inputmode="numeric"
+            value="${fmtInput(defVal)}"
+            oninput="onPriceChange('${key}', this.value)"
+            onblur="this.value = fmtInput(currentPrices['${key}'] || ${defVal})"
+          >
+        </div>
+        <div class="price-card-result" id="result-${key}">${cardResult(role, i)}</div>
+      </div>`;
+    });
+  });
+  grid.innerHTML = html;
+  updatePriceSummary();
+}
+
+function updatePriceSummary() {
+  let totalClose = 0, totalBalloon = 0, totalNote = 0;
+  PAIRS.forEach(pair => {
+    const bankLoan = pair.bank.price * 0.80;
+    const bankDown = pair.bank.price * 0.20;
+    totalClose  += (bankLoan - pair.bank.bal) + bankDown - pair.seller.bal;
+    const notePmt = pair.seller.price / AMORT_MOS;
+    totalBalloon += pair.seller.price - notePmt * 60;
+    totalNote    += notePmt * 12 * 5; // ~5 active years per note approx
+  });
+  const grand = totalClose + totalBalloon + totalNote;
+  document.getElementById('priceSummary').innerHTML = `
+    <div>
+      <div class="ps-cell-amount">${fmt(totalClose)}</div>
+      <div class="ps-cell-label">Est. closing cash<br>across all 4 pairs</div>
+    </div>
+    <div>
+      <div class="ps-cell-amount">${fmt(totalNote)}</div>
+      <div class="ps-cell-label">Est. note income<br>(monthly payments)</div>
+    </div>
+    <div>
+      <div class="ps-cell-amount">${fmt(totalBalloon)}</div>
+      <div class="ps-cell-label">Balloon payoffs<br>Years 6–9</div>
+    </div>
+    <div>
+      <div class="ps-cell-amount">${fmt(grand)}</div>
+      <div class="ps-cell-label">Estimated<br>grand total</div>
+    </div>
+  `;
+}
+
+
+// ── Build cost section ──
+// ── Cost section data ──
+// Each property gets agent, makeReady, closing, holding fields (all dollar amounts)
+// Defaults based on 6% / 3% / 2% of price + $1303/mo × 3mo holding
+const ALL_PROPS = [];
+PAIRS.forEach(pair => { ALL_PROPS.push(pair.bank); ALL_PROPS.push(pair.seller); });
+
+function costDefaults(prop) {
+  return {
+    agent:     Math.round(prop.price * 0.06),
+    makeReady: Math.round(prop.price * 0.03),
+    closing:   Math.round(prop.price * 0.02),
+    holding:   1303 * 3,
+  };
+}
+
+const costInputs = {}; // keyed by prop.addr
+function initCostInputs() {
+  ALL_PROPS.forEach(prop => {
+    if (!costInputs[prop.addr]) costInputs[prop.addr] = costDefaults(prop);
+  });
+}
+
+function resetCostInputs() {
+  ALL_PROPS.forEach(prop => { costInputs[prop.addr] = costDefaults(prop); });
+  buildCostInputCards();
+  buildCostSection();
+}
+
+function onCostInput(addr, field, val) {
+  const n = parseInt(val.replace(/[^0-9]/g, ''), 10);
+  if (!isNaN(n) && n >= 0) {
+    costInputs[addr][field] = n;
+    buildCostSection();
+  }
+}
+
+function buildCostInputCards() {
+  const el = document.getElementById('costInputCards');
+  if (!el) return;
+  let html = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;">';
+  ALL_PROPS.forEach((prop, i) => {
+    const vals = costInputs[prop.addr] || costDefaults(prop);
+    const pair = PAIRS.find(p => p.bank.addr === prop.addr || p.seller.addr === prop.addr);
+    const role = pair && pair.bank.addr === prop.addr ? 'bank' : 'seller';
+    const total = vals.agent + vals.makeReady + vals.closing + vals.holding;
+    html += `
+    <div style="background:#fff;border:1px solid var(--cream3);border-radius:14px;padding:20px 22px;box-shadow:0 2px 14px var(--warm-shadow);">
+      <div style="font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:4px;">Year ${pair ? pair.year : ''} · ${role === 'bank' ? 'Bank purchase' : 'Seller financed'}</div>
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:14px;">${prop.addr}</div>
+      <div style="display:flex;flex-direction:column;gap:9px;">
+        ${['agent','makeReady','closing','holding'].map(field => {
+          const labels = { agent:'Agent Commission', makeReady:'Make-Ready / Repairs', closing:'Closing Costs', holding:'Holding Costs' };
+          const colors = { agent:'var(--red)', makeReady:'var(--amber)', closing:'var(--ink3)', holding:'var(--ink3)' };
+          const safeAddr = prop.addr.replace(/[^a-zA-Z0-9]/g,'_');
+          return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+            <span style="font-size:11px;color:${colors[field]};font-weight:500;flex-shrink:0;">${labels[field]}</span>
+            <div style="display:flex;align-items:center;border:1px solid var(--cream3);border-radius:6px;overflow:hidden;background:var(--cream);">
+              <span style="padding:5px 8px;font-family:'Cormorant Garamond',serif;font-size:14px;color:var(--gold);border-right:1px solid var(--cream3);">$</span>
+              <input type="text" inputmode="numeric"
+                id="ci_${safeAddr}_${field}"
+                value="${vals[field].toLocaleString()}"
+                style="border:none;background:transparent;font-family:'Cormorant Garamond',serif;font-size:16px;width:90px;padding:5px 8px;color:var(--ink);outline:none;"
+                oninput="onCostInput('${prop.addr}','${field}',this.value)"
+                onblur="this.value=(costInputs['${prop.addr}']||costDefaults({price:${prop.price}}))['${field}'].toLocaleString()">
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--cream3);display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:var(--ink3);">Total cost if sold traditionally</span>
+        <span id="ci_total_${prop.addr.replace(/[^a-zA-Z0-9]/g,'_')}" style="font-family:'Cormorant Garamond',serif;font-size:20px;color:var(--red);font-weight:500;">${fmt(total)}</span>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
+
+function buildCostSection() {
+  // Read from costInputs
+  let totAgent=0, totMakeReady=0, totClosing=0, totHolding=0, totTotal=0, totPrice=0;
+
+  // Update per-card totals live
+  ALL_PROPS.forEach(prop => {
+    const vals = costInputs[prop.addr] || costDefaults(prop);
+    const t = vals.agent + vals.makeReady + vals.closing + vals.holding;
+    const el = document.getElementById('ci_total_' + prop.addr.replace(/[^a-zA-Z0-9]/g,'_'));
+    if (el) el.textContent = fmt(t);
+  });
+
+  // Build results table
+  let tableHtml = `<thead><tr>
+    <th>Property</th>
+    <th style="color:var(--red)">Agent</th>
+    <th style="color:var(--amber)">Make-Ready</th>
+    <th>Closing</th>
+    <th>Holding</th>
+    <th style="color:var(--red)">Total Cost</th>
+    <th style="color:var(--green)">You Save As-Is</th>
+  </tr></thead><tbody>`;
+
+  ALL_PROPS.forEach(prop => {
+    const vals = costInputs[prop.addr] || costDefaults(prop);
+    const total = vals.agent + vals.makeReady + vals.closing + vals.holding;
+    totAgent += vals.agent; totMakeReady += vals.makeReady;
+    totClosing += vals.closing; totHolding += vals.holding;
+    totTotal += total; totPrice += prop.price;
+
+    tableHtml += `<tr>
+      <td><strong>${prop.addr}</strong></td>
+      <td style="color:var(--red)">${fmt(vals.agent)}</td>
+      <td style="color:var(--amber)">${fmt(vals.makeReady)}</td>
+      <td style="color:var(--ink3)">${fmt(vals.closing)}</td>
+      <td style="color:var(--ink3)">${fmt(vals.holding)}</td>
+      <td style="color:var(--red);font-weight:700;">${fmt(total)}</td>
+      <td style="color:var(--green);font-weight:700;">${fmt(total)}</td>
+    </tr>`;
+  });
+
+  tableHtml += `<tr style="background:rgba(160,120,64,0.05);border-top:1px solid var(--cream3);">
+    <td><strong>Total</strong></td>
+    <td style="color:var(--red);font-weight:600;">${fmt(totAgent)}</td>
+    <td style="color:var(--amber);font-weight:600;">${fmt(totMakeReady)}</td>
+    <td style="color:var(--ink3);">${fmt(totClosing)}</td>
+    <td style="color:var(--ink3);">${fmt(totHolding)}</td>
+    <td style="color:var(--red);font-weight:800;font-size:15px;">${fmt(totTotal)}</td>
+    <td style="color:var(--green);font-weight:800;font-size:15px;">${fmt(totTotal)}</td>
+  </tr></tbody>`;
+
+  const costTable = document.getElementById('costTable');
+  if (costTable) costTable.innerHTML = tableHtml;
+
+  // Cost bars
+  const bars = document.getElementById('costBars');
+  if (bars && totPrice > 0) {
+    const items = [
+      { label: 'Agent Commissions',    amount: totAgent,     color: 'var(--red)'   },
+      { label: 'Make-Ready & Repairs', amount: totMakeReady, color: 'var(--amber)' },
+      { label: 'Closing Costs',        amount: totClosing,   color: 'var(--ink3)'  },
+      { label: 'Holding Costs',        amount: totHolding,   color: 'var(--ink3)'  },
+    ];
+    bars.innerHTML = '<div style="display:flex;flex-direction:column;gap:16px;">' +
+      items.map(item => {
+        const barPct = totTotal > 0 ? Math.round((item.amount / totTotal) * 100) : 0;
+        const labelPct = totPrice > 0 ? ((item.amount / totPrice) * 100).toFixed(1) : '0.0';
+        return `
+        <div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+            <span style="font-size:13px;color:var(--ink2);font-weight:500;">${item.label}</span>
+            <span style="font-family:'Cormorant Garamond',serif;font-size:22px;color:${item.color};font-weight:500;">${fmt(item.amount)}</span>
+          </div>
+          <div style="height:6px;background:var(--cream3);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;width:${barPct}%;background:${item.color};border-radius:3px;transition:width .6s ease;"></div>
+          </div>
+          <div style="font-size:11px;color:var(--ink3);margin-top:3px;">${barPct}% of total costs · ${labelPct}% of sale price</div>
+        </div>`;
+      }).join('') + '</div>';
+  }
+
+  // Punchline
+  const punchline = document.getElementById('costPunchline');
+  if (punchline) {
+    punchline.innerHTML = `
+    <div style="background:linear-gradient(135deg,rgba(160,120,64,0.06),rgba(58,125,92,0.04));border:1px solid rgba(160,120,64,0.2);border-radius:16px;padding:32px;text-align:center;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">The bottom line</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(42px,6vw,72px);font-weight:300;color:var(--green);line-height:1;">${fmt(totTotal)}</div>
+      <div style="font-size:14px;color:var(--ink3);margin-top:12px;line-height:1.8;max-width:500px;margin-left:auto;margin-right:auto;">
+        Stays in <em>your</em> pocket by selling as-is directly —
+        no agents, no renovations, no holding costs, no waiting.
+        That's <strong style="color:var(--ink2);">${totPrice>0?((totTotal/totPrice)*100).toFixed(1):0}% of your total sale price</strong> you'd otherwise hand over before you see a dollar.
+      </div>
+    </div>`;
+  }
+}
+
+// ── Init ──
+buildTimeline();
+buildIncomeTable();
+window.addEventListener('DOMContentLoaded', () => {
+  buildPriceEditor();
+  initCostInputs();
+  buildCostInputCards();
+  buildCostSection();
+  setTimeout(initObserver, 100);
+  initNavDots();
+});
+</script>
 </body>
 </html>
