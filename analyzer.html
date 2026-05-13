@@ -578,22 +578,23 @@ function fmtPct(n) {
 // `sellerAsk` is the per-property reference ask; `sfAsk` is the +$50k-shifted SF ask
 // used for the seller payouts comparison panel.
 //
-// Rents reflect the operational assumption: $1,750/unit current and $1,850/unit
-// post-renovation (i.e. $3,500 / $3,700 per duplex). Rehab is "as-they-turn" so
+// Rents reflect the operational assumption: $1,200/unit current and $1,800/unit
+// post-renovation (i.e. $2,400 / $3,600 per duplex). Property 4B is modeled
+// lower ($2,000 / $2,800) as the cheaper outlier. Rehab is "as-they-turn" so
 // nothing forces vacancy.
 const rawData = [
   // pair 1  (seller's pair ask $820,000)
-  { pair: 1, type: "bank",   addr: "Property 1A", bal: 73937.15,  pmt: 1739.22, curRent: 3500, newRent: 3700, price: 360000, sellerAsk: 410000 },
-  { pair: 1, type: "seller", addr: "Property 1B", bal: 69246.44,  pmt: 1723.22, curRent: 3500, newRent: 3700, price: 460000, sellerAsk: 410000, sfAsk: 460000 },
+  { pair: 1, type: "bank",   addr: "Property 1A", bal: 73937.15,  pmt: 1739.22, curRent: 2400, newRent: 3600, price: 360000, sellerAsk: 410000 },
+  { pair: 1, type: "seller", addr: "Property 1B", bal: 69246.44,  pmt: 1723.22, curRent: 2400, newRent: 3600, price: 460000, sellerAsk: 410000, sfAsk: 460000 },
   // pair 2  (seller's pair ask $832,000)
-  { pair: 2, type: "bank",   addr: "Property 2A", bal: 76637.59,  pmt: 1749.27, curRent: 3500, newRent: 3700, price: 360000, sellerAsk: 410000 },
-  { pair: 2, type: "seller", addr: "Property 2B", bal: 72245.79,  pmt: 1817.59, curRent: 3500, newRent: 3700, price: 472000, sellerAsk: 422000, sfAsk: 472000 },
+  { pair: 2, type: "bank",   addr: "Property 2A", bal: 76637.59,  pmt: 1749.27, curRent: 2400, newRent: 3600, price: 360000, sellerAsk: 410000 },
+  { pair: 2, type: "seller", addr: "Property 2B", bal: 72245.79,  pmt: 1817.59, curRent: 2400, newRent: 3600, price: 472000, sellerAsk: 422000, sfAsk: 472000 },
   // pair 3  (seller's pair ask $844,000)
-  { pair: 3, type: "bank",   addr: "Property 3A", bal: 81947.65,  pmt: 2202.48, curRent: 3500, newRent: 3700, price: 372000, sellerAsk: 422000 },
-  { pair: 3, type: "seller", addr: "Property 3B", bal: 130972.34, pmt: 2005.17, curRent: 3500, newRent: 3700, price: 472000, sellerAsk: 422000, sfAsk: 472000 },
+  { pair: 3, type: "bank",   addr: "Property 3A", bal: 81947.65,  pmt: 2202.48, curRent: 2400, newRent: 3600, price: 372000, sellerAsk: 422000 },
+  { pair: 3, type: "seller", addr: "Property 3B", bal: 130972.34, pmt: 2005.17, curRent: 2400, newRent: 3600, price: 472000, sellerAsk: 422000, sfAsk: 472000 },
   // pair 4  (seller's pair ask $752,000)
-  { pair: 4, type: "bank",   addr: "Property 4A", bal: 99764.90,  pmt: 1936.05, curRent: 3500, newRent: 3700, price: 372000, sellerAsk: 422000 },
-  { pair: 4, type: "seller", addr: "Property 4B", bal: 51746.39,  pmt: 1269.69, curRent: 3500, newRent: 3700, price: 380000, sellerAsk: 330000, sfAsk: 380000 }
+  { pair: 4, type: "bank",   addr: "Property 4A", bal: 99764.90,  pmt: 1936.05, curRent: 2400, newRent: 3600, price: 372000, sellerAsk: 422000 },
+  { pair: 4, type: "seller", addr: "Property 4B", bal: 51746.39,  pmt: 1269.69, curRent: 2000, newRent: 2800, price: 380000, sellerAsk: 330000, sfAsk: 380000 }
 ];
 
 let chartInstance = null;
