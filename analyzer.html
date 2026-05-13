@@ -254,7 +254,7 @@
     <h1>The 8-Duplex Portfolio — <em>Deal Analyzer</em></h1>
     <p style="max-width:620px;margin:0 auto;">Cashflow, returns, and tax-shield modeling for the 8-duplex portfolio. Buy-and-hold with REPS, stabilized rents to $1,850/unit, and the price-shift seller-finance structure.</p>
     <p style="max-width:680px;margin:16px auto 0;font-size:13px;color:var(--ink3);background:rgba(160,120,64,0.08);border:1px solid rgba(160,120,64,0.2);border-radius:8px;padding:12px 18px;">
-      <strong style="color:var(--gold);">Price shift baked in:</strong> The seller's pair total is honored exactly ($3,248k across all four pairs). $50k of equity per pair is shifted from the bank side to the SF side, the SF stated rate is set to <strong>6.0%</strong> (IRS AFR), and the recorded SF deed is auto-derived so payments + 7-yr balloon equal the seller's ask — yielding an <strong>effective 0% rate to the buyer</strong> while creating a <strong>real REPS-side interest deduction</strong>. Bank side carries a <strong>2% seller credit</strong>; SF side carries a <strong>$25k repair escrow</strong> at close (LLC-invoice method, deposited to HYSA). Edit any Sale Price below to override.
+      <strong style="color:var(--gold);">Price shift baked in:</strong> The seller's pair total is honored exactly ($3,248k across all four pairs). $50k of equity per pair is shifted from the bank side to the SF side, the SF stated rate is set to <strong>6.0%</strong> (IRS AFR), and the recorded SF deed is auto-derived so payments + 5-yr balloon equal the seller's ask — yielding an <strong>effective 0% rate to the buyer</strong> while creating a <strong>real REPS-side interest deduction</strong>. Bank side carries a <strong>2% seller credit</strong>; SF side carries a <strong>$25k repair escrow</strong> at close (LLC-invoice method, deposited to HYSA). Edit any Sale Price below to override.
     </p>
   </header>
 
@@ -283,7 +283,7 @@
             <div class="metric-value accent" id="tot-init-coc">—</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label" title="After 7-year balloon: SF notes are refinanced through the bank at the bank rate">Post-Refi Mo. Cashflow</div>
+            <div class="metric-label" title="After 5-year balloon: SF notes are refinanced through the bank at the bank rate">Post-Refi Mo. Cashflow</div>
             <div class="metric-value success" id="tot-refi-cashflow">—</div>
           </div>
           <div class="metric-card" style="background:var(--cream2)">
@@ -328,7 +328,7 @@
             <div class="metric-value success" id="tot-tax-savings-yr1">—</div>
           </div>
           <div class="metric-card">
-            <div class="metric-label" title="Lifetime SF interest paid to the seller = sum of (sale − deed) across all 4 SF notes. This is the total deductible interest over the 7-yr balloon window.">Lifetime SF Interest</div>
+            <div class="metric-label" title="Lifetime SF interest paid to the seller = sum of (sale − deed) across all 4 SF notes. This is the total deductible interest over the 5-yr balloon window.">Lifetime SF Interest</div>
             <div class="metric-value" id="tot-sf-interest-life">—</div>
           </div>
           <div class="metric-card" style="background:var(--cream2)">
@@ -350,7 +350,7 @@
               <tr>
                 <th>Address</th>
                 <th>Role</th>
-                <th class="text-right" title="For bank: what the bank lends against. For seller: the seller's total take over the 7-yr note (pmts + balloon = sale price).">Sale Price</th>
+                <th class="text-right" title="For bank: what the bank lends against. For seller: the seller's total take over the 5-yr note (pmts + balloon = sale price).">Sale Price</th>
                 <th class="text-right" title="Sale price minus interest tax shield over the note life. Formula: sale − (sale − deed) × marginal tax rate. Only differs from Sale for seller notes at rate > 0%.">Effective</th>
                 <th class="text-right" title="What gets recorded on the deed. Derived for seller at rate > 0%; = sale price at 0%. Property tax is based on this.">Deed</th>
                 <th class="text-right">Current Bal</th>
@@ -372,7 +372,7 @@
           <h2>Per-Property Monthly Cashflow</h2>
           <span class="badge">Stabilized</span>
         </div>
-        <p style="font-size:13px; margin-bottom: 16px;">Stabilized monthly income minus debt service, taxes, insurance, and vacancy/maintenance reserves. "Initial" = first 7 years; "Post-Refi" = after SF balloon refinances at the bank rate (same as Initial for bank-financed properties). Property tax scales with the recorded deed price — lowering seller prices directly lowers the Tax column.</p>
+        <p style="font-size:13px; margin-bottom: 16px;">Stabilized monthly income minus debt service, taxes, insurance, and vacancy/maintenance reserves. "Initial" = first 5 years; "Post-Refi" = after SF balloon refinances at the bank rate (same as Initial for bank-financed properties). Property tax scales with the recorded deed price — lowering seller prices directly lowers the Tax column.</p>
         <div style="overflow-x: auto;">
           <table id="cashflow-table" style="font-size:13px;">
             <thead>
@@ -401,7 +401,7 @@
           <h2>12-Year Loan & Pmt Matrix</h2>
           <span class="badge">Individual Modeling</span>
         </div>
-        <p style="font-size:13px; margin-bottom: 16px;">Shows the active monthly payment for each property over time. Seller-financed (SF) loans run at 6% amortized over 20 years with a 7-year balloon — paid to the seller, then refinanced through the bank at maturity.</p>
+        <p style="font-size:13px; margin-bottom: 16px;">Shows the active monthly payment for each property over time. Seller-financed (SF) loans run at 6% amortized over 20 years with a 5-year balloon — paid to the seller, then refinanced through the bank at maturity.</p>
         <div style="overflow-x: auto;">
           <table id="loans-table" style="font-size:12px;">
             <thead>
@@ -419,7 +419,7 @@
       <!-- Year by Year Cashflow Chart -->
       <div class="card">
         <h2>12-Year Cashflow Projection</h2>
-        <p style="font-size:13px; margin-bottom: 16px;">Models the phased acquisition (one pair/yr), renovation period (reduced rent for 3 months), and the 7-year SF balloon payoffs — pair 1 refi hits year 8, pair 4 refi lands in year 11.</p>
+        <p style="font-size:13px; margin-bottom: 16px;">Models the phased acquisition (one pair/yr), renovation period (reduced rent for 3 months), and the 5-year SF balloon payoffs — pair 1 refi hits year 6, pair 4 refi lands in year 9.</p>
         <div class="chart-container">
           <canvas id="cashflowChart"></canvas>
         </div>
@@ -433,13 +433,13 @@
       <!-- Seller's Payouts Table -->
       <div class="card mb-4">
         <h2>Seller's Payouts (Pair Math)</h2>
-        <p style="font-size:12px;margin-bottom:12px;">Seller sale price = what the seller actually collects over the 7-yr note (pmts + balloon), regardless of the SF rate. Raising the rate lowers the recorded deed (property-tax basis) but keeps the take the same. Gap column shows the pair total vs. the original ask.</p>
+        <p style="font-size:12px;margin-bottom:12px;">Seller sale price = what the seller actually collects over the 5-yr note (pmts + balloon), regardless of the SF rate. Raising the rate lowers the recorded deed (property-tax basis) but keeps the take the same. Gap column shows the pair total vs. the original ask.</p>
         <table id="seller-table" style="font-size:12px;">
           <thead>
             <tr>
               <th>Pair</th>
               <th class="text-right">Bank $</th>
-              <th class="text-right">Seller $ (0%, 7yr)</th>
+              <th class="text-right">Seller $ (0%, 5yr)</th>
               <th class="text-right">Pair Total</th>
               <th class="text-right">vs. Orig. Ask</th>
               <th class="text-right">Cash @ Close</th>
@@ -482,7 +482,7 @@
 
         <div class="input-group">
           <label title="When the balloon refi is due on the seller-financed properties.">Seller Finance Balloon (Yrs)</label>
-          <input type="number" id="inp-sf-balloon" value="7" step="1" oninput="calculateModel()">
+          <input type="number" id="inp-sf-balloon" value="5" step="1" oninput="calculateModel()">
         </div>
 
         <div class="input-group">
@@ -567,7 +567,7 @@ function fmtPct(n) {
 // Each pair has one bank-financed property (full deed price) and one seller-financed
 // property structured via the "price shift": $50k of equity is moved from the bank
 // side onto the seller side, and the SF stated rate is set to 6% so that interest +
-// principal across the 84-month run + the balloon equals exactly the seller's ask. Net
+// principal across the 60-month run + the balloon equals exactly the seller's ask. Net
 // effective interest cost to the buyer is 0% — the deed price is reduced enough to
 // absorb the 6% interest, while the deduction creates a real REPS-side tax shield.
 //
@@ -854,7 +854,7 @@ function calculateModel() {
     const d = sellerData[k];
     d.closing = d.bankPrice * closingCostsPct;
     // At close the seller gets the bank wire, pays off both underlying mortgages and their
-    // share of closing. The seller price is collected over the 7-year note term.
+    // share of closing. The seller price is collected over the 5-year note term.
     d.cashAtClose = d.bankPrice - d.debtsPaid - d.closing;
     d.pairTotal = d.bankPrice + d.sellerPrice;
   });
